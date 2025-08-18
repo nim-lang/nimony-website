@@ -19,13 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
 
       - name: Checkout nim-lang/nimony (docs)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: nim-lang/nimony
           path: upstream
