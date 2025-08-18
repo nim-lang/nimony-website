@@ -1,5 +1,5 @@
 
-name: Deploy upstream docs to GitHub Pages
+name: Deploy Nimony docs to GitHub Pages
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: nim-lang/nimony
-          path: upstream
+          path: nimony
           ref: master
           fetch-depth: 1
 
@@ -39,10 +39,10 @@ jobs:
         run: |
           rm -rf site || true
           mkdir -p site
-          if [ -d upstream/doc ]; then
-            cp -a upstream/doc/. site/
+          if [ -d nimony/doc ]; then
+            cp -a nimony/doc/. site/
           else
-            echo "Error: upstream/doc not found" >&2
+            echo "Error: nimony/doc not found" >&2
             exit 1
           fi
 
