@@ -39,16 +39,9 @@ jobs:
         run: |
           rm -rf site || true
           mkdir -p site
-          if [ -d nimony/doc ]; then
-            cp -a nimony/doc/. site/
-          else
-            echo "Error: nimony/doc not found" >&2
-            exit 1
-          fi
 
-      - name: Copy website
-        run: |
-          cp website/index.html site/
+          nim md2html -o:site/index.html nimony/doc/manual.md
+
 
       - name: Upload static files as artifact
         id: deployment
