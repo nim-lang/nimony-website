@@ -23,6 +23,9 @@ jobs:
         with:
           fetch-depth: 1
 
+      - uses: jiro4989/setup-nim-action@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout nim-lang/nimony (docs)
         uses: actions/checkout@v4
@@ -42,6 +45,10 @@ jobs:
             echo "Error: upstream/doc not found" >&2
             exit 1
           fi
+
+      - name: Copy website
+        run: |
+          cp website/index.html site/
 
       - name: Upload static files as artifact
         id: deployment
