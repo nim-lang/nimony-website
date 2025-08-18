@@ -1,0 +1,62 @@
+
+name: Deploy upstream docs to GitHub Pages
+
+on:
+	push:
+		branches: [ master ]
+	workflow_dispatch:
+
+
+# Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+permissions:
+  pages: write      # to deploy to Pages
+  id-token: write   # to verify the deployment originates from an appropriate source
+
+jobs:
+  # Build job
+  build:
+    # Specify runner +  build & upload the static files as an artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+
+      - name: Checkout nim-lang/nimony (docs)
+        uses: actions/checkout@v4
+        with:
+          repository: nim-lang/nimony
+          path: upstream
+          ref: master
+          fetch-depth: 1
+
+      - name: Prepare site directory
+        run: |
+          rm -rf site || true
+          mkdir -p site
+          if [ -d upstream/doc ]; then
+            cp -a upstream/doc/. site/
+          else
+            echo "Error: upstream/doc not found" >&2
+            exit 1
+          fi
+
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+        with:
+          path: site/
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
