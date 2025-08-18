@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -28,7 +28,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout nim-lang/nimony (docs)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: nim-lang/nimony
           path: nimony
