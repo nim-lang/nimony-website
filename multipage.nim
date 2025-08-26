@@ -27,8 +27,8 @@ const
 
     <div class="container">
         <header class="nav-controls" style="font-size: smaller;">
-            <button class="nav-btn" onclick="navigateToPage('manual.html')">🗺️ Single Page</button>
-            <h1>NIMONY MANUAL $5</h1>
+            <button class="nav-btn" onclick="navigateToPage('index.html')">🗺️ Single Page</button>
+            <h1>NIMONY MANUAL</h1>
         </header>
 
         <main>
@@ -100,8 +100,7 @@ proc generatePage(destDir, h1: string, content: string;
 
   let main = mainBegin % [
     n, pageName(currentPage + 1, next.innerText()),
-    p, pageName(currentPage - 1, prev.innerText()),
-    if h1content.len > 0: " - " & h1content else: ""
+    p, pageName(currentPage - 1, prev.innerText())
   ]
 
   writeFile(page, main & content & mainEnd &
