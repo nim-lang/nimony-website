@@ -215,20 +215,7 @@ function setupIntersectionObserver() {
 
 // Navigation functionality
 function navigateToPage(filename) {
-    if (!filename || filename.trim() === '') {
-        console.warn('No filename provided for navigation');
-        return;
-    }
-
-    // Get the base path from current location
-    const currentPath = window.location.pathname;
-    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-
-    // Construct the target URL
-    const targetUrl = basePath + filename;
-
-    // Navigate to the target page
-    window.location.href = targetUrl;
+    window.location.href = filename;
 }
 
 // Load saved preferences and initialize on page load

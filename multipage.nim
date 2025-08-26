@@ -103,16 +103,16 @@ proc combine(a, sep, b: string): string =
     result.add b
 
 proc pageName(page: int, h1: string): string =
-  combine($page, "-", h1.toFilename()) & ".html"
+  combine("page" & $page, "-", h1.toFilename()) & ".html"
 
-proc generatePage(h1: string, head: string, content: string;
+proc generatePage(h1: string, content: string;
      prev, next: string) =
   inc currentPage
   let h1content = h1.innerText()
   let page = "copied/htmldocs/" & pageName(currentPage, h1content)
 
   let n = if next.len > 0: "theme-switcher" else: "theme-switcher-disabled"
-  let p = if prev.len > 0: "theme-switcher" else: "theme-switcher-disabled"
+  let p = if currentPage > 1: "theme-switcher" else: "theme-switcher-disabled"
 
   let main = mainBegin % [
     n, pageName(currentPage + 1, next.innerText()),
@@ -125,20 +125,18 @@ proc generatePage(h1: string, head: string, content: string;
 
 proc main() =
   var inHead = true
-  var head = ""
   var currentH1 = ""
   var prevH1 = ""
   var content = ""
   for line in lines("copied/htmldocs/manual.html"):
-    if inHead:
-      head.add line
-      head.add "\n"
-    if line == "</head>":
+    var i = 0
+    while i < line.len and line[i] == ' ': inc i
+    if line.continuesWith("<main>", i):
       inHead = false
     elif line.startsWith("<h1"):
       echo "h1: ", line
     elif line.startsWith("<h2"):
-      generatePage(currentH1, head, content, prevH1, line)
+      generatePage(currentH1, content, prevH1, line)
       content.setLen 0
       prevH1 = currentH1
       currentH1 = line
@@ -147,6 +145,6 @@ proc main() =
       content.add line
       content.add "\n"
 
-  generatePage(currentH1, head, content, prevH1, "")
+  generatePage(currentH1, content, prevH1, "")
 
 main()
