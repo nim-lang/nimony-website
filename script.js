@@ -83,7 +83,7 @@ function updateFileOverview() {
 
     contentSections.forEach((section, index) => {
         const sectionText = section.textContent.trim();
-        const sectionId = section.id || `section-$${index}`;
+        const sectionId = section.id || `section-${index}`;
         const tagName = section.tagName.toLowerCase();
 
         if (tagName === 'h1') {
@@ -133,7 +133,7 @@ function updateFileOverview() {
         const li = document.createElement('li');
         const a = document.createElement('a');
 
-        a.href = `#$${item.id}`;
+        a.href = `#${item.id}`;
         a.textContent = item.text;
         a.title = item.text;
 
@@ -211,6 +211,24 @@ function setupIntersectionObserver() {
     });
 
     sections.forEach(section => observer.observe(section));
+}
+
+// Navigation functionality
+function navigateToPage(filename) {
+    if (!filename || filename.trim() === '') {
+        console.warn('No filename provided for navigation');
+        return;
+    }
+
+    // Get the base path from current location
+    const currentPath = window.location.pathname;
+    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+
+    // Construct the target URL
+    const targetUrl = basePath + filename;
+
+    // Navigate to the target page
+    window.location.href = targetUrl;
 }
 
 // Load saved preferences and initialize on page load

@@ -593,6 +593,31 @@ footer {
     color: var(--bg-primary);
 }
 
+/* Disabled theme switcher button */
+.theme-switcher-disabled {
+    width: 100%;
+    background-color: var(--third-background);
+    border: none;
+    border-bottom: 2px solid var(--border-color);
+    color: var(--hint);
+    padding: 12px 15px;
+    border-radius: 6px 6px 0 0;
+    cursor: not-allowed;
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.theme-switcher-disabled:hover {
+    background-color: var(--third-background);
+    color: var(--hint);
+    cursor: not-allowed;
+}
+
 /* File overview section */
 .file-overview {
     padding: 15px;

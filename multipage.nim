@@ -17,9 +17,9 @@ const
     <!-- Right sidebar with theme switcher and file overview -->
     <div class="right-sidebar" id="rightSidebar">
         <button class="theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
-        <div class="file-overview">
-            <div class="current-section" id="currentSection">Loading...</div>
-        </div>
+
+        <button class="$1" onclick="navigateToPage('$2')"> → Next</button>
+        <button class="$3" onclick="navigateToPage('$4')"> ← Prev</button>
     </div>
 
     <!-- Toggle button for sidebar (shown when collapsed) -->
@@ -27,15 +27,13 @@ const
 
     <div class="container">
         <header>
-            <h1>NIMONY MANUAL - $1</h1>
+            <h1>NIMONY MANUAL - $5</h1>
             <p class="subtitle">The Complete Guide to the programming language</p>
         </header>
 
         <nav>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="toggleNavigation()">🗺️ Navigation</button>
-                <button class="nav-btn" onclick="scrollToSection('language-guide')">📚 Language Guide</button>
-                <button class="nav-btn" onclick="scrollToSection('standard-library')">📚 Standard Library</button>
             </div>
             <div class="nav-hierarchy" id="navHierarchy">
                 <div class="nav-section">
@@ -104,12 +102,25 @@ proc combine(a, sep, b: string): string =
     result.add sep
     result.add b
 
+proc pageName(page: int, h1: string): string =
+  combine($page, "-", h1.toFilename()) & ".html"
+
 proc generatePage(h1: string, head: string, content: string;
      prev, next: string) =
   inc currentPage
   let h1content = h1.innerText()
-  let page = "generated/page" & combine($currentPage, "-", h1content.toFilename()) & ".html"
-  writeFile(page, (mainBegin % h1content) & content & mainEnd &
+  let page = "copied/htmldocs/" & pageName(currentPage, h1content)
+
+  let n = if next.len > 0: "theme-switcher" else: "theme-switcher-disabled"
+  let p = if prev.len > 0: "theme-switcher" else: "theme-switcher-disabled"
+
+  let main = mainBegin % [
+    n, pageName(currentPage + 1, next.innerText()),
+    p, pageName(currentPage - 1, prev.innerText()),
+    h1content
+  ]
+
+  writeFile(page, main & content & mainEnd &
             script & "\n</body>\n</html>")
 
 proc main() =
