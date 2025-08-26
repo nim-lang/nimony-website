@@ -27,7 +27,7 @@ const
 
     <div class="container">
         <header>
-            <h1>NIMONY MANUAL - $5</h1>
+            <h1>NIMONY MANUAL $5</h1>
             <p class="subtitle">The Complete Guide to the programming language</p>
         </header>
 
@@ -117,7 +117,7 @@ proc generatePage(h1: string, content: string;
   let main = mainBegin % [
     n, pageName(currentPage + 1, next.innerText()),
     p, pageName(currentPage - 1, prev.innerText()),
-    h1content
+    if h1content.len > 0: " - " & h1content else: ""
   ]
 
   writeFile(page, main & content & mainEnd &
