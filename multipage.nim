@@ -33,7 +33,7 @@ const
 
         <nav>
             <div class="nav-controls">
-                <button class="nav-btn" onclick="toggleNavigation()">🗺️ Navigation</button>
+                <button class="nav-btn" onclick="navigateToPage('manual.html')">🗺️ Single Page</button>
             </div>
             <div class="nav-hierarchy" id="navHierarchy">
                 <div class="nav-section">
@@ -134,8 +134,11 @@ proc main() =
     if line.continuesWith("<main>", i):
       inHead = false
     elif line.startsWith("<h1"):
-      echo "h1: ", line
-    elif line.startsWith("<h2"):
+      generatePage(currentH1, content, prevH1, line)
+      content.setLen 0
+      prevH1 = currentH1
+      currentH1 = line
+    elif line.startsWith("<h2") and content.len > 600:
       generatePage(currentH1, content, prevH1, line)
       content.setLen 0
       prevH1 = currentH1
