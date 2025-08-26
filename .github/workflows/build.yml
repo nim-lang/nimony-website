@@ -39,9 +39,12 @@ jobs:
         run: |
           rm -rf site || true
           mkdir -p site
+          cp style.css site/
+          cp script.js site/
 
           nim c -r nimony/tools/dagon.nim nimony/doc/stdlib.dgn.md
           nim md2html -o:site/index.html nimony/doc/manual.md
+          nim c -r multipage.nim site/index.html
 
 
       - name: Upload static files as artifact
