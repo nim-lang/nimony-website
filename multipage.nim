@@ -1,7 +1,7 @@
 ## We use a simple line-based parsing solution which is only correct for Nim's HTML output.
 ## But that's fine for another decade or so.
 
-import std / [syncio, strutils, parsexml, streams]
+import std / [syncio, strutils, os, parsexml, streams]
 
 const
   mainBegin = """
@@ -15,7 +15,7 @@ const
 </head>
 <body>
     <!-- Right sidebar with theme switcher and file overview -->
-    <div class="right-sidebar" id="rightSidebar">
+    <div class="right-sidebar" id="rightSidebar" style="width: 100px;">
         <button class="theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
 
         <button class="$1" onclick="navigateToPage('$2')"> → Next</button>
@@ -26,31 +26,15 @@ const
     <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">📋</button>
 
     <div class="container">
-        <header>
+        <header class="nav-controls" style="font-size: smaller;">
+            <button class="nav-btn" onclick="navigateToPage('manual.html')">🗺️ Single Page</button>
             <h1>NIMONY MANUAL $5</h1>
-            <p class="subtitle">The Complete Guide to the programming language</p>
         </header>
-
-        <nav>
-            <div class="nav-controls">
-                <button class="nav-btn" onclick="navigateToPage('manual.html')">🗺️ Single Page</button>
-            </div>
-            <div class="nav-hierarchy" id="navHierarchy">
-                <div class="nav-section">
-                    <ul class="section-list" id="sectionList">
-                        <!-- Sections will be populated by JavaScript -->
-                    </ul>
-                </div>
-            </div>
-        </nav>
 
         <main>
 """
   mainEnd = """
         </main>
-        <footer>
-            <p>&copy; 2025 Andreas Rumpf. This manual is a work in progress.</p>
-        </footer>
     </div>
 """
   script = """
@@ -105,11 +89,11 @@ proc combine(a, sep, b: string): string =
 proc pageName(page: int, h1: string): string =
   combine("page" & $page, "-", h1.toFilename()) & ".html"
 
-proc generatePage(h1: string, content: string;
+proc generatePage(destDir, h1: string, content: string;
      prev, next: string) =
   inc currentPage
   let h1content = h1.innerText()
-  let page = "copied/htmldocs/" & pageName(currentPage, h1content)
+  let page = destDir / pageName(currentPage, h1content)
 
   let n = if next.len > 0: "theme-switcher" else: "theme-switcher-disabled"
   let p = if currentPage > 1: "theme-switcher" else: "theme-switcher-disabled"
@@ -123,23 +107,24 @@ proc generatePage(h1: string, content: string;
   writeFile(page, main & content & mainEnd &
             script & "\n</body>\n</html>")
 
-proc main() =
+proc main(manual: string) =
+  let destDir = manual.splitFile().dir
   var inHead = true
   var currentH1 = ""
   var prevH1 = ""
   var content = ""
-  for line in lines("copied/htmldocs/manual.html"):
+  for line in lines(manual):
     var i = 0
     while i < line.len and line[i] == ' ': inc i
     if line.continuesWith("<main>", i):
       inHead = false
-    elif line.startsWith("<h1"):
-      generatePage(currentH1, content, prevH1, line)
+    elif line.startsWith("<h1") and currentPage > 0:
+      generatePage(destDir, currentH1, content, prevH1, line)
       content.setLen 0
       prevH1 = currentH1
       currentH1 = line
     elif line.startsWith("<h2") and content.len > 600:
-      generatePage(currentH1, content, prevH1, line)
+      generatePage(destDir, currentH1, content, prevH1, line)
       content.setLen 0
       prevH1 = currentH1
       currentH1 = line
@@ -148,6 +133,6 @@ proc main() =
       content.add line
       content.add "\n"
 
-  generatePage(currentH1, content, prevH1, "")
+  generatePage(destDir, currentH1, content, prevH1, "")
 
-main()
+main(paramStr(1))
