@@ -5,6 +5,11 @@ on:
   push:
     branches: [ master ]
   workflow_dispatch:
+  repository_dispatch:
+    types: [ nimony-updated ]
+  schedule:
+    # Run every 6 hours to check for updates
+    - cron: '0 */6 * * *'
 
 
 # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
@@ -17,6 +22,8 @@ jobs:
   build:
     # Specify runner +  build & upload the static files as an artifact
     runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.check-changes.outputs.has_changes }}
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v5
@@ -33,9 +40,22 @@ jobs:
           repository: nim-lang/nimony
           path: nimony
           ref: master
-          fetch-depth: 1
+          fetch-depth: 0  # Get full history to check for changes
+
+      - name: Check for changes in nimony
+        id: check-changes
+        run: |
+          # For scheduled runs, check if there are changes since last run
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # Get the last commit hash from the previous run (you'd need to store this)
+            # For now, we'll always build on schedule - you can enhance this later
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Prepare site directory
+        if: steps.check-changes.outputs.has_changes == 'true'
         run: |
           rm -rf site || true
           mkdir -p site
@@ -49,6 +69,7 @@ jobs:
 
       - name: Upload static files as artifact
         id: deployment
+        if: steps.check-changes.outputs.has_changes == 'true'
         uses: actions/upload-pages-artifact@v4 # or specific "vX.X.X" version tag for this action
         with:
           path: site/
@@ -57,9 +78,9 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    if: needs.build.outputs.has_changes == 'true'
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
