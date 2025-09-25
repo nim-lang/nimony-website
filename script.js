@@ -57,6 +57,8 @@ function scrollToSection(sectionId) {
     const section = document.getElementById(sectionId);
     if (section) {
         section.scrollIntoView({ behavior: 'smooth' });
+        // Update URL with anchor
+        history.pushState(null, null, `#${sectionId}`);
     }
 }
 
@@ -143,6 +145,8 @@ function updateFileOverview() {
             const targetSection = document.getElementById(item.id);
             if (targetSection) {
                 targetSection.scrollIntoView({ behavior: 'smooth' });
+                // Update URL with anchor
+                history.pushState(null, null, `#${item.id}`);
             }
         });
 
