@@ -1,6 +1,6 @@
 # Nimony v0.2 — early preview of Nim 3.0's compiler
 
-**2025-10-01**
+**2025-11-01**
 
 ## Author: "planetis"
 
