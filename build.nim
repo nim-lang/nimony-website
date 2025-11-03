@@ -11,6 +11,9 @@ proc buildArticles =
   for file in walkFiles("articles/*.md"):
     let dest = file.splitFile.name
     exec "nim md2html -o:site/" & dest & ".html " & file
+  for file in walkFiles("articles/*.gif"):
+    let dest = file.splitFile.name
+    copyFile file, "site/" & dest & ".gif"
 
 when defined(local):
   copyDir "../nimony", "nimony"

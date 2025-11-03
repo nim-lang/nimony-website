@@ -17,7 +17,7 @@ For this purpose, I wrote a simple UI program: in about 250 lines of code, we ha
 .. raw:: html
 
   <p style="text-align: center;">
-    <img width="640" height="360" src="../articles/nimony-v0.2-screencast.gif" alt="Nimony v0.2 TicTacToe demo">
+    <img width="640" height="360" src="nimony-v0.2-screencast.gif" alt="Nimony v0.2 TicTacToe demo">
   </p>
 
 And indeed, quite a few modules from the standard library have already been ported, though some not in their entirety: tables, hashes, intsets, parseopt, paths, dirs, unicode, encodings, monotimes, locks, rawthreads, syncio, setutils, strutils, parseutils, envvars, cmdline, memfiles, math. Together they give you a well‑rounded set of functionality to start writing programs in Nimony.
