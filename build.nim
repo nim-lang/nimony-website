@@ -12,7 +12,7 @@ try:
   copyFile "style.css", "site/style.css"
   copyFile "script.js", "site/script.js"
   exec "nim c -r nimony/tools/dagon.nim nimony/doc/stdlib.dgn.md"
-  exec "nim md2html -o:site/index.html nimony/doc/manual.md"
-  exec "nim c -r multipage.nim site/index.html"
+  exec "nim md2html -o:site/manual.html nimony/doc/manual.md"
+  exec "nim c -r multipage.nim site/manual.html"
 finally:
   removeDir "nimony"
