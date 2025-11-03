@@ -32,42 +32,7 @@ color-scheme: light;
 --clipboard-image: var(--clipboard-image-normal)
 }
 
-[data-theme="dark"] {
-color-scheme: dark;
---primary-background: #171921;
---secondary-background: #1e202a;
---third-background: #2b2e3b;
---info-background: #008000;
---warning-background: #807000;
---error-background: #c03000;
---border: #0e1014;
---text: #fff;
---anchor: #8be9fd;
---anchor-focus: #8be9fd;
---input-focus: #8be9fd;
---strong: #bd93f9;
---hint: #7A7C85;
-
---keyword: #f8f8f2;
---identifier: #f8f8f2;
---comment: #ff79c6;
---operator: #f8f8f2;
---punctuation: #f8f8f2;
---other: #f8f8f2;
---escapeSequence: #bd93f9;
---number: #f1fa8c;
---literal: #f1fa8c;
---program: #9090c0;
---option: #90b010;
---raw-data: #8be9fd;
-
---clipboard-image-normal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: lightgray' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E %3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' /%3E %3C/svg%3E");
---clipboard-image-selected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: lightgray' viewBox='0 0 20 20' fill='currentColor'%3E %3Cpath d='M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z' /%3E %3Cpath d='M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z' /%3E %3C/svg%3E");
---clipboard-image: var(--clipboard-image-normal);
-}
-
 @media (prefers-color-scheme: dark) {
-[data-theme="auto"] {
     color-scheme: dark;
     --primary-background: #171921;
     --secondary-background: #1e202a;
@@ -100,8 +65,6 @@ color-scheme: dark;
     --clipboard-image-selected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: lightgray' viewBox='0 0 20 20' fill='currentColor'%3E %3Cpath d='M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z' /%3E %3Cpath d='M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z' /%3E %3C/svg%3E");
     --clipboard-image: var(--clipboard-image-normal);
 }
-}
-
 
 span.DecNumber {
 color: var(--number); }
@@ -200,20 +163,22 @@ color: var(--other); }
 }
 
 /* Dark theme color scheme */
-[data-theme="dark"] {
-    --bg-primary: #002451;      /* Dark blue background */
-    --bg-secondary: #00346e;    /* Slightly lighter blue */
-    --third-background: transparent; /* Third level background */
-    --text-primary: #ffffff;    /* White text */
-    --text-secondary: #ffff00;  /* Yellow for captions and highlights */
-    --text-muted: #b4b4b4;      /* Light gray for secondary text */
-    --border-color: #1d3f53;    /* Darker blue border */
-    --code-bg: var(--bg-primary);         /* Darker blue for code blocks */
-    --code-border: #1d3f53;     /* Darker blue for code borders */
-    --accent-color: #ffff00;    /* Soft red for accents */
-    --string-color: #d1f1a9;    /* Light green for strings */
-    --keyword-color: #ff9da4;   /* Soft red for keywords */
-    --comment-color: #7285b7;   /* Muted blue for comments */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #002451;           /* Dark blue background */
+        --bg-secondary: #00346e;         /* Slightly lighter blue */
+        --third-background: transparent; /* Third level background */
+        --text-primary: #ffffff;         /* White text */
+        --text-secondary: #ffff00;       /* Yellow for captions and highlights */
+        --text-muted: #b4b4b4;           /* Light gray for secondary text */
+        --border-color: #1d3f53;         /* Darker blue border */
+        --code-bg: var(--bg-primary);    /* Darker blue for code blocks */
+        --code-border: #1d3f53;          /* Darker blue for code borders */
+        --accent-color: #ffff00;         /* Soft red for accents */
+        --string-color: #d1f1a9;         /* Light green for strings */
+        --keyword-color: #ff9da4;        /* Soft red for keywords */
+        --comment-color: #7285b7;        /* Muted blue for comments */
+    }
 }
 
 * {
@@ -572,7 +537,7 @@ footer {
 }
 
 /* Theme switcher button */
-.theme-switcher {
+.nav-btn {
     width: 100%;
     background-color: var(--bg-secondary);
     border: none;
@@ -588,13 +553,13 @@ footer {
     text-align: center;
 }
 
-.theme-switcher:hover {
+.nav-btn:hover {
     background-color: var(--text-secondary);
     color: var(--bg-primary);
 }
 
 /* Disabled theme switcher button */
-.theme-switcher-disabled {
+.nav-btn-disabled {
     width: 100%;
     background-color: var(--third-background);
     border: none;
@@ -612,7 +577,7 @@ footer {
     pointer-events: none;
 }
 
-.theme-switcher-disabled:hover {
+.nav-btn-disabled:hover {
     background-color: var(--third-background);
     color: var(--hint);
     cursor: not-allowed;
