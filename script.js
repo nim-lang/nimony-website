@@ -1,24 +1,3 @@
-// Theme switching functionality
-function toggleTheme() {
-    const root = document.documentElement;
-    const button = document.querySelector('.theme-switcher');
-
-    if (root.getAttribute('data-theme') === 'dark') {
-        // Switch to light theme
-        root.removeAttribute('data-theme');
-        button.textContent = '🌙 Dark';
-        button.title = 'Switch to dark theme';
-    } else {
-        // Switch to dark theme
-        root.setAttribute('data-theme', 'dark');
-        button.textContent = '🌙 Light';
-        button.title = 'Switch to light theme';
-    }
-
-    // Save preference to localStorage
-    localStorage.setItem('nimony-theme', root.getAttribute('data-theme') || 'light');
-}
-
 // Sidebar toggle functionality
 function toggleSidebar() {
     const sidebar = document.getElementById('rightSidebar');
@@ -224,19 +203,6 @@ function navigateToPage(filename) {
 
 // Load saved preferences and initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Load saved theme preference
-    const savedTheme = localStorage.getItem('nimony-theme');
-    const button = document.querySelector('.theme-switcher');
-
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        button.textContent = '🌙 Light';
-        button.title = 'Switch to light theme';
-    } else {
-        button.textContent = '🌙 Dark';
-        button.title = 'Switch to dark theme';
-    }
-
     // Load saved sidebar preference
     const savedSidebarCollapsed = localStorage.getItem('nimony-sidebar-collapsed');
     const sidebar = document.getElementById('rightSidebar');

@@ -14,10 +14,8 @@ const
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Right sidebar with theme switcher and file overview -->
+    <!-- Right sidebar with file overview -->
     <div class="right-sidebar" id="rightSidebar" style="width: 100px;">
-        <button class="theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
-
         <button class="$1" onclick="navigateToPage('$2')"> → Next</button>
         <button class="$3" onclick="navigateToPage('$4')"> ← Prev</button>
     </div>
@@ -95,8 +93,8 @@ proc generatePage(destDir, h1: string, content: string;
   let h1content = h1.innerText()
   let page = destDir / pageName(currentPage, h1content)
 
-  let n = if next.len > 0: "theme-switcher" else: "theme-switcher-disabled"
-  let p = if currentPage > 1: "theme-switcher" else: "theme-switcher-disabled"
+  let n = if next.len > 0: "nav-btn" else: "nav-btn-disabled"
+  let p = if currentPage > 1: "nav-btn" else: "nav-btn-disabled"
 
   let main = mainBegin % [
     n, pageName(currentPage + 1, next.innerText()),
