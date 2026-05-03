@@ -310,22 +310,89 @@ nav {
 
 
 
+/* Inline nav links — lighter gold chip than full .nav-btn nuggets */
 .nav-link {
-    color: var(--text-primary);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: inline-block;
+    color: var(--bg-secondary);
     text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    background-color: var(--accent-color);
-    border: 2px solid var(--accent-color);
-    font-weight: bold;
-    transition: all 0.3s ease;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.92rem;
+    border: 1px solid color-mix(in srgb, var(--accent-color) 54%, black);
+    background: linear-gradient(
+        162deg,
+        color-mix(in srgb, var(--accent-color) 52%, white) 0%,
+        var(--accent-color) 48%,
+        color-mix(in srgb, var(--accent-color) 74%, black) 100%
+    );
+    box-shadow:
+        inset 0 1px 3px color-mix(in srgb, white 34%, transparent),
+        inset 0 -2px 6px color-mix(in srgb, black 11%, transparent),
+        0 2px 7px color-mix(in srgb, var(--accent-color) 18%, transparent),
+        0 1px 3px rgba(0, 0, 0, 0.09);
+    text-shadow: 0 1px 1px color-mix(in srgb, black 18%, transparent);
+    transition: transform 0.2s ease, filter 0.22s ease, box-shadow 0.22s ease;
+}
+
+[data-theme="dark"] .nav-link {
+    text-shadow: 0 1px 2px color-mix(in srgb, black 34%, transparent);
+}
+
+.nav-link::before {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 32%;
+    top: 0;
+    height: 46%;
+    border-radius: 999px / 50%;
+    background: radial-gradient(
+        ellipse 100% 100% at 44% 0%,
+        color-mix(in srgb, white 68%, var(--accent-color)) 0%,
+        transparent 74%
+    );
+    opacity: 0.36;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .nav-link::before {
+        animation: gold-nugget-glint 7.5s ease-in-out infinite;
+        animation-delay: 0.75s;
+    }
 }
 
 .nav-link:hover {
-    background-color: var(--bg-primary);
-    color: var(--accent-color);
+    color: var(--bg-secondary);
+    filter: brightness(1.05) saturate(1.05);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow:
+        inset 0 2px 4px color-mix(in srgb, white 38%, transparent),
+        inset 0 -3px 8px color-mix(in srgb, black 13%, transparent),
+        0 5px 16px color-mix(in srgb, var(--accent-color) 28%, transparent),
+        0 3px 8px rgba(0, 0, 0, 0.11);
+}
+
+.nav-link:hover::before {
+    opacity: 0.56;
+}
+
+.nav-link:active {
+    transform: translateY(0) scale(0.98);
+    filter: brightness(0.96);
+    box-shadow:
+        inset 0 3px 10px color-mix(in srgb, black 16%, transparent),
+        inset 0 1px 2px color-mix(in srgb, white 26%, transparent),
+        0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.nav-link:visited {
+    color: var(--bg-secondary);
 }
 
 /* Hierarchical Navigation */
@@ -396,36 +463,105 @@ nav {
     text-decoration: underline;
 }
 
-/* Minimap button — match accent (yellow / rust) */
+/* Minimap button — metallic “gold nugget” */
 .nav-btn {
-    background-color: var(--accent-color);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(
+        155deg,
+        color-mix(in srgb, var(--accent-color) 58%, white) 0%,
+        var(--accent-color) 42%,
+        color-mix(in srgb, var(--accent-color) 72%, black) 78%,
+        color-mix(in srgb, var(--accent-color) 52%, black) 100%
+    );
     color: var(--bg-secondary);
-    border: 1px solid color-mix(in srgb, var(--accent-color) 72%, black);
+    border: 1px solid color-mix(in srgb, var(--accent-color) 52%, black);
     padding: 10px 18px;
     font-weight: 600;
     cursor: pointer;
     border-radius: var(--radius-sm);
-    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    transition: transform 0.15s ease, filter 0.25s ease, box-shadow 0.25s ease;
     font-size: 0.95rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow:
+        inset 0 2px 4px color-mix(in srgb, white 42%, transparent),
+        inset 0 -4px 10px color-mix(in srgb, black 16%, transparent),
+        0 1px 0 color-mix(in srgb, var(--accent-color) 65%, white),
+        0 5px 14px color-mix(in srgb, var(--accent-color) 28%, transparent),
+        0 3px 8px rgba(0, 0, 0, 0.14);
+    text-shadow: 0 1px 2px color-mix(in srgb, black 22%, transparent);
+}
+
+[data-theme="dark"] .nav-btn {
+    text-shadow: 0 1px 2px color-mix(in srgb, black 40%, transparent);
+}
+
+.nav-btn::before {
+    content: "";
+    position: absolute;
+    left: 6%;
+    right: 22%;
+    top: 0;
+    height: 52%;
+    border-radius: 999px / 55%;
+    background: radial-gradient(
+        ellipse 100% 100% at 45% 0%,
+        color-mix(in srgb, white 78%, var(--accent-color)) 0%,
+        transparent 70%
+    );
+    opacity: 0.52;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .nav-btn::before {
+        animation: gold-nugget-glint 6s ease-in-out infinite;
+    }
 }
 
 .nav-btn:hover {
-    background-color: color-mix(in srgb, var(--accent-color) 82%, black);
-    color: var(--bg-secondary);
-    border-color: color-mix(in srgb, var(--accent-color) 58%, black);
-    box-shadow: var(--shadow-md);
+    filter: brightness(1.06) saturate(1.08);
+    box-shadow:
+        inset 0 2px 5px color-mix(in srgb, white 48%, transparent),
+        inset 0 -4px 12px color-mix(in srgb, black 20%, transparent),
+        0 1px 0 color-mix(in srgb, var(--accent-color) 72%, white),
+        0 7px 22px color-mix(in srgb, var(--accent-color) 42%, transparent),
+        0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.nav-btn:hover::before {
+    opacity: 0.78;
 }
 
 .nav-btn:active {
-    transform: translateY(1px);
+    transform: translateY(1px) scale(0.99);
+    filter: brightness(0.96) saturate(1.02);
+    box-shadow:
+        inset 0 4px 14px color-mix(in srgb, black 24%, transparent),
+        inset 0 1px 2px color-mix(in srgb, white 28%, transparent),
+        0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .nav-btn.expanded {
-    background-color: var(--bg-secondary);
+    background: linear-gradient(
+        185deg,
+        var(--bg-secondary) 0%,
+        color-mix(in srgb, var(--bg-secondary) 88%, var(--accent-color)) 100%
+    );
     color: var(--accent-color);
-    border-color: var(--accent-color);
-    box-shadow: none;
+    border: 2px solid color-mix(in srgb, var(--accent-color) 82%, black);
+    filter: none;
+    box-shadow:
+        inset 0 2px 5px color-mix(in srgb, var(--accent-color) 12%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--accent-color) 38%, white),
+        0 4px 16px color-mix(in srgb, var(--accent-color) 24%, transparent);
+    text-shadow: none;
+}
+
+.nav-btn.expanded::before {
+    opacity: 0;
+    animation: none;
 }
 
 /* Main content */
@@ -624,12 +760,20 @@ footer {
     overflow: hidden;
 }
 
-/* Theme switcher + sidebar prev/next (same class as nav-btn styling intent) */
+/* Theme switcher + sidebar prev/next — same gold-nugget treatment */
 .theme-switcher {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
     width: 100%;
-    background-color: var(--accent-color);
+    background: linear-gradient(
+        158deg,
+        color-mix(in srgb, var(--accent-color) 56%, white) 0%,
+        var(--accent-color) 44%,
+        color-mix(in srgb, var(--accent-color) 74%, black) 100%
+    );
     border: none;
-    border-bottom: 2px solid color-mix(in srgb, var(--accent-color) 72%, black);
+    border-bottom: 2px solid color-mix(in srgb, var(--accent-color) 58%, black);
     color: var(--bg-secondary);
     padding: 12px 15px;
     border-radius: 6px 6px 0 0;
@@ -637,13 +781,59 @@ footer {
     font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
     font-size: 14px;
     font-weight: bold;
-    transition: all 0.3s ease;
+    transition: transform 0.15s ease, filter 0.25s ease, box-shadow 0.25s ease;
     text-align: center;
+    box-shadow:
+        inset 0 2px 4px color-mix(in srgb, white 38%, transparent),
+        inset 0 -3px 8px color-mix(in srgb, black 14%, transparent),
+        0 2px 10px color-mix(in srgb, var(--accent-color) 26%, transparent);
+    text-shadow: 0 1px 2px color-mix(in srgb, black 22%, transparent);
+}
+
+[data-theme="dark"] .theme-switcher {
+    text-shadow: 0 1px 2px color-mix(in srgb, black 40%, transparent);
+}
+
+.theme-switcher::before {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 28%;
+    top: 0;
+    height: 50%;
+    border-radius: 999px / 52%;
+    background: radial-gradient(
+        ellipse 100% 100% at 42% 0%,
+        color-mix(in srgb, white 76%, var(--accent-color)) 0%,
+        transparent 68%
+    );
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .theme-switcher::before {
+        animation: gold-nugget-glint 6.5s ease-in-out infinite;
+        animation-delay: 0.35s;
+    }
 }
 
 .theme-switcher:hover {
-    background-color: color-mix(in srgb, var(--accent-color) 82%, black);
-    color: var(--bg-secondary);
+    filter: brightness(1.06) saturate(1.08);
+    box-shadow:
+        inset 0 2px 5px color-mix(in srgb, white 46%, transparent),
+        inset 0 -4px 10px color-mix(in srgb, black 18%, transparent),
+        0 4px 18px color-mix(in srgb, var(--accent-color) 38%, transparent);
+}
+
+.theme-switcher:hover::before {
+    opacity: 0.76;
+}
+
+.theme-switcher:active {
+    transform: scale(0.992);
+    filter: brightness(0.95);
 }
 
 /* Disabled theme switcher button */
@@ -761,27 +951,48 @@ footer {
     cursor: pointer;
 }
 
-/* Toggle button for sidebar */
+/* Toggle button for sidebar — compact nugget */
 .sidebar-toggle {
     position: fixed;
     top: 20px;
     right: 20px;
     z-index: 1001;
-    background-color: var(--accent-color);
-    border: 2px solid var(--accent-color);
-    color: var(--bg-primary);
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(
+        155deg,
+        color-mix(in srgb, var(--accent-color) 56%, white) 0%,
+        var(--accent-color) 45%,
+        color-mix(in srgb, var(--accent-color) 70%, black) 100%
+    );
+    border: 1px solid color-mix(in srgb, var(--accent-color) 52%, black);
+    color: var(--bg-secondary);
     padding: 8px 12px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 12px;
     font-weight: bold;
-    transition: all 0.3s ease;
+    transition: transform 0.15s ease, filter 0.25s ease, box-shadow 0.25s ease;
     display: none;
+    box-shadow:
+        inset 0 1px 3px color-mix(in srgb, white 44%, transparent),
+        inset 0 -2px 6px color-mix(in srgb, black 14%, transparent),
+        0 3px 12px color-mix(in srgb, var(--accent-color) 30%, transparent),
+        0 2px 6px rgba(0, 0, 0, 0.12);
+    text-shadow: 0 1px 2px color-mix(in srgb, black 22%, transparent);
 }
 
 .sidebar-toggle:hover {
-    background-color: var(--bg-primary);
-    color: var(--accent-color);
+    filter: brightness(1.08) saturate(1.06);
+    box-shadow:
+        inset 0 2px 4px color-mix(in srgb, white 48%, transparent),
+        inset 0 -3px 8px color-mix(in srgb, black 18%, transparent),
+        0 5px 18px color-mix(in srgb, var(--accent-color) 40%, transparent);
+}
+
+.sidebar-toggle:active {
+    transform: scale(0.97);
+    filter: brightness(0.94);
 }
 
 /* Responsive design for sidebar */
@@ -802,6 +1013,17 @@ footer {
 
     .right-sidebar.collapsed {
         width: 50px;
+    }
+}
+
+@keyframes gold-nugget-glint {
+    0%, 100% {
+        opacity: 0.42;
+        transform: translateX(-5%);
+    }
+    50% {
+        opacity: 0.72;
+        transform: translateX(5%);
     }
 }
 
@@ -876,6 +1098,8 @@ footer {
     * {
         box-shadow: none !important;
         text-shadow: none !important;
+        filter: none !important;
+        animation: none !important;
     }
 
     /* Ensure proper page breaks */
