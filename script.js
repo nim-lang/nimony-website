@@ -39,15 +39,17 @@ function toggleSidebar() {
 // Navigation toggle functionality
 function toggleNavigation() {
     const hierarchy = document.getElementById('navHierarchy');
-    const button = document.querySelector('.nav-btn');
+    const button = document.querySelector('button.nav-btn[onclick*="toggleNavigation"]');
+
+    if (!hierarchy || !button) return;
 
     if (hierarchy.classList.contains('active')) {
         hierarchy.classList.remove('active');
-        button.textContent = '🗺️ Navigation';
+        button.textContent = 'Navigation';
         button.classList.remove('expanded');
     } else {
         hierarchy.classList.add('active');
-        button.textContent = '🗺️ Hide Navigation';
+        button.textContent = 'Hide navigation';
         button.classList.add('expanded');
     }
 }
