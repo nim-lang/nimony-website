@@ -18,11 +18,11 @@ With plugins on top of NIF / NJ you can go far beyond a plain compiler driver—
 
 The evolving **Nim 3** language (sum types, borrow checking, concepts on generics, …) is absolutely part of the story—but treat those **stricter checks as welcome extras**, not Nimony’s main justification.
 
-For how Nimony relates to **Nim 3** and **Nim 2**, see the **[FAQ](faq.html)**.
+For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
 Below are small **language** sketches Nimony emphasizes alongside that toolchain story.
 
----
+----
 
 ## Sum types (algebraic data types)
 
@@ -51,7 +51,7 @@ echo eval(Add(left: Lit(value: 10), right: Lit(value: 32)))  # 42
 
 Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a branch), and grouped matchers like `{Add, Sub}(left, right)` appear where multiple tags share the same shape—see **Case in object** in the [manual](manual.html).
 
----
+----
 
 ## Borrow checking — iterator safety and aliasing
 
@@ -76,7 +76,7 @@ var s = @[1, 2, 3]
 
 This follows **prefix exclusion**: while `s` (or `s.elements`) is borrowed, that path cannot be mutated until the borrow ends—sibling fields can still be updated.
 
----
+----
 
 ## Concepts describe what generics need
 
@@ -96,15 +96,15 @@ echo min("b", "a")
 
 Container-style concepts (e.g. `Findable[T]`) work the same way with iterators and indexed access—see **Concepts** and **Generics** in the [manual](manual.html).
 
----
+----
 
 ## Nim DNA — tooling-friendly configuration
 
-Nimony aims at reproducible builds and tooling: separate **`nimony.args`**, **`nimony.paths`**, and **`$compiler.args`**-style files next to your project, derived keys from `--cc` / `--linker` prefixes instead of a fixed compiler whitelist.
+Nimony aims at reproducible builds and tooling: separate `nimony.args`, `nimony.paths`, and `$compiler.args`-style files next to your project, derived keys from `--cc` / `--linker` prefixes instead of a fixed compiler whitelist.
 
 Full installation and CLI usage: [manual](manual.html#installation).
 
----
+----
 
 # News
 

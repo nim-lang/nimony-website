@@ -115,9 +115,9 @@ try:
   buildArticles()
   copyFile "style.css", "site/style.css"
   copyFile "script.js", "site/script.js"
-  exec "../nimony/bin/nimony -f --outdir:site/stdlib doc ../nimony/tests/nimony/stdlib/tall.nim"
+  exec "nimony/bin/nimony -f --outdir:site/stdlib doc nimony/tests/nimony/stdlib/tall.nim"
   postProcessDagonDocs()
-  exec "nim md2html -d:man -o:site/manual.html ../nimony/doc/manual.md"
+  exec "nim md2html -d:man -o:site/manual.html nimony/doc/manual.md"
   exec "nim md2html -o:site/index.html content/index.md"
   exec "nim md2html -o:site/faq.html content/faq.md"
 
