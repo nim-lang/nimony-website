@@ -54,7 +54,7 @@ proc wrapDagonPage(path: string) =
                 <button class="nav-btn" onclick="navigateToPage('$3')">News</button>
                 <button class="nav-btn" onclick="navigateToPage('$4')">Manual</button>
                 <button class="nav-btn" onclick="navigateToPage('$5')">Installation</button>
-                <button class="nav-btn" onclick="navigateToPage('$6')">Stdlib</button>
+                <button class="nav-btn" onclick="navigateToPage('$6')">Library</button>
                 <button class="nav-btn" onclick="navigateToPage('$7')">FAQ</button>
             </div>
             <div class="nav-hierarchy" id="navHierarchy">

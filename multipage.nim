@@ -28,7 +28,7 @@ const
     <div class="container">
         <header class="nav-controls" style="font-size: smaller;">
             <button class="nav-btn" onclick="navigateToPage('manual.html')">Single Page</button>
-            <button class="nav-btn" onclick="navigateToPage('stdlib/theindex.html')">Stdlib</button>
+            <button class="nav-btn" onclick="navigateToPage('stdlib/theindex.html')">Library</button>
             <button class="nav-btn" onclick="navigateToPage('faq.html')">FAQ</button>
             <h1>NIMONY MANUAL</h1>
         </header>
