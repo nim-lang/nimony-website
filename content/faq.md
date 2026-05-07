@@ -32,18 +32,19 @@ Much better than in classic Nim’s macro-centric shape:
 
 **Language:** Nimony explores Nim 3 designs ahead of the big compat push (see [differences.md](https://github.com/nim-lang/nimony/blob/master/doc/differences.md)), including:
 
-- explicit **`nil`** only where you spell **`nil ref T`** / **`nil ptr T`**, otherwise refs/ptrs cannot hold nil by default;
-- **sum types** with **`case` in `object`** and **`case value of Tag(fields):`** matching;
+- explicit `nil` only where you spell `nil ref T` / `nil ptr T`, otherwise refs/ptrs cannot hold nil by default;
+- **sum types** with pattern matching;
 - **concepts** on generics (`proc foo[T: Comparable](...)`) checked at definition *and* instantiation;
 - **borrow checking** for aliasing / iterator invalidation;
 - **side-effect defaults** flipped versus Nim 2 (`func`/`iterator` → `noSideEffect`, `proc` → `sideEffect`);
-- polymorphic `[]` instead of paired `var` / non-`var` indexing overloads.
+- polymorphic `[]` instead of paired `var` / non-`var` indexing overloads;
+- **passive procs** to unify parallelism and concurrency.
 
 ----
 
 ## Is Nimony a drop-in replacement for Nim 2?
 
-**No.** It neither tries to compile all Nim 2 unchanged nor replicate every pragmatic shortcut overnight. It shines when you want the **NIF-centric toolchain** and early **Nim 3** semantics and can accept **gaps** documented under “present” in [differences.md](https://github.com/nim-lang/nimony/blob/master/doc/differences.md).
+**No.** Once that happens it will be renamed to Nim 3. Currently it neither tries to compile all Nim 2 unchanged nor replicate every pragmatic shortcut overnight. It shines when you want the **NIF-centric toolchain** and early **Nim 3** semantics and can accept **gaps** documented under “present” in [differences.md](https://github.com/nim-lang/nimony/blob/master/doc/differences.md).
 
 ----
 
