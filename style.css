@@ -774,11 +774,13 @@ footer {
 }
 
 /* Theme switcher — sits in the nav-controls bar; inherits nav-btn sizing
-   (so it doesn't stretch). The gold-nugget gradient stays as-is. */
+   (so it doesn't stretch). `margin-left: auto` pushes it to the right end
+   of the flex bar. The gold-nugget gradient stays as-is. */
 .theme-switcher {
     position: relative;
     overflow: hidden;
     isolation: isolate;
+    margin-left: auto;
     background: linear-gradient(
         158deg,
         color-mix(in srgb, var(--accent-color) 56%, white) 0%,

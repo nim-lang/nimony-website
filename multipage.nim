@@ -20,7 +20,7 @@ const
             <button class="nav-btn" onclick="navigateToPage('stdlib/theindex.html')">Library</button>
             <button class="nav-btn" onclick="navigateToPage('faq.html')">FAQ</button>
             <button class="nav-btn theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
-            <h1>NIMONY MANUAL</h1>
+            <h1>Nimony Manual</h1>
         </header>
 
         <main>

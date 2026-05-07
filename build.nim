@@ -42,6 +42,11 @@ proc wrapDagonPage(path: string) =
 </head>
 <body>
     <div class="container">
+        <header>
+            <h1>Nimony</h1>
+            <p class="subtitle">The road to Nim 3</p>
+        </header>
+
         <nav>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="navigateToPage('$2')">Home</button>
@@ -113,7 +118,7 @@ try:
   exec "nimony/bin/nimony -f --outdir:site/stdlib doc nimony/tests/nimony/stdlib/tall.nim"
   postProcessDagonDocs()
   exec "nim md2html -d:man -o:site/language.html nimony/doc/language.md"
-  exec "nim md2html -d:man -o:site/install.html nimony/doc/install.md"
+  exec "nim md2html -o:site/install.html nimony/doc/install.md"
   exec "nim md2html -o:site/index.html content/index.md"
   exec "nim md2html -o:site/faq.html content/faq.md"
 
