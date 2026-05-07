@@ -49,5 +49,5 @@ Much better than in classic Nim’s macro-centric shape:
 
 ## Where can I read more?
 
-- The [manual](manual.html) on this site (installation, args configuration, full language guide).
+- The [manual](language.html) on this site has a full language guide.
 - [differences.md](https://github.com/nim-lang/nimony/blob/master/doc/differences.md) for Nim 2 vs Nim 3 / Nimony trade-offs and open questions.

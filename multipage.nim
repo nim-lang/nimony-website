@@ -14,22 +14,12 @@ const
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Right sidebar with theme switcher and file overview -->
-    <div class="right-sidebar" id="rightSidebar" style="width: 100px;">
-        <button class="theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
-
-        <button class="$1" onclick="navigateToPage('$2')"> → Next</button>
-        <button class="$3" onclick="navigateToPage('$4')"> ← Prev</button>
-    </div>
-
-    <!-- Toggle button for sidebar (shown when collapsed) -->
-    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">📋</button>
-
     <div class="container">
         <header class="nav-controls" style="font-size: smaller;">
             <button class="nav-btn" onclick="navigateToPage('manual.html')">Single Page</button>
             <button class="nav-btn" onclick="navigateToPage('stdlib/theindex.html')">Library</button>
             <button class="nav-btn" onclick="navigateToPage('faq.html')">FAQ</button>
+            <button class="nav-btn theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
             <h1>NIMONY MANUAL</h1>
         </header>
 
@@ -37,6 +27,10 @@ const
 """
   mainEnd = """
         </main>
+        <footer class="page-nav" style="display: flex; justify-content: center; gap: 1rem; margin: 2rem 0 1rem;">
+            <button class="$1" onclick="navigateToPage('$2')">← Prev</button>
+            <button class="$3" onclick="navigateToPage('$4')">Next →</button>
+        </footer>
     </div>
 """
   script = """
@@ -97,15 +91,15 @@ proc generatePage(destDir, h1: string, content: string;
   let h1content = h1.innerText()
   let page = destDir / pageName(currentPage, h1content)
 
-  let n = if next.len > 0: "theme-switcher" else: "theme-switcher-disabled"
-  let p = if currentPage > 1: "theme-switcher" else: "theme-switcher-disabled"
+  let n = if next.len > 0: "nav-btn" else: "nav-btn nav-btn-disabled"
+  let p = if currentPage > 1: "nav-btn" else: "nav-btn nav-btn-disabled"
 
-  let main = mainBegin % [
-    n, pageName(currentPage + 1, next.innerText()),
-    p, pageName(currentPage - 1, prev.innerText())
+  let endStr = mainEnd % [
+    p, pageName(currentPage - 1, prev.innerText()),
+    n, pageName(currentPage + 1, next.innerText())
   ]
 
-  writeFile(page, main & content & mainEnd &
+  writeFile(page, mainBegin & content & endStr &
             script & "\n</body>\n</html>")
 
 proc main(manual: string) =
@@ -118,8 +112,14 @@ proc main(manual: string) =
     var i = 0
     while i < line.len and line[i] == ' ': inc i
     if line.continuesWith("<main>", i):
+      # Just enter body mode — the source `<main>` (and its closer) are
+      # discarded so they don't double up with the wrapper's `<main>` /
+      # `</main>` and produce a nested-box border.
       inHead = false
-    elif line.startsWith("<h1") and currentPage > 0:
+      continue
+    if line.continuesWith("</main>", i):
+      break
+    if line.startsWith("<h1") and currentPage > 0:
       generatePage(destDir, currentH1, content, prevH1, line)
       content.setLen 0
       prevH1 = currentH1

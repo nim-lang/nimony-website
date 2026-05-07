@@ -564,6 +564,19 @@ nav {
     animation: none;
 }
 
+.nav-btn.nav-btn-disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+    pointer-events: none;
+    filter: saturate(0.4);
+    box-shadow: none;
+}
+
+.nav-btn.nav-btn-disabled::before {
+    opacity: 0;
+    animation: none;
+}
+
 /* Main content */
 main {
     background-color: var(--bg-secondary);
@@ -760,12 +773,12 @@ footer {
     overflow: hidden;
 }
 
-/* Theme switcher + sidebar prev/next — same gold-nugget treatment */
+/* Theme switcher — sits in the nav-controls bar; inherits nav-btn sizing
+   (so it doesn't stretch). The gold-nugget gradient stays as-is. */
 .theme-switcher {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    width: 100%;
     background: linear-gradient(
         158deg,
         color-mix(in srgb, var(--accent-color) 56%, white) 0%,
@@ -775,11 +788,8 @@ footer {
     border: none;
     border-bottom: 2px solid color-mix(in srgb, var(--accent-color) 58%, black);
     color: var(--bg-secondary);
-    padding: 12px 15px;
-    border-radius: 6px 6px 0 0;
     cursor: pointer;
     font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
-    font-size: 14px;
     font-weight: bold;
     transition: transform 0.15s ease, filter 0.25s ease, box-shadow 0.25s ease;
     text-align: center;
@@ -836,78 +846,28 @@ footer {
     filter: brightness(0.95);
 }
 
-/* Disabled theme switcher button */
-.theme-switcher-disabled {
-    width: 100%;
-    background-color: var(--third-background);
-    border: none;
-    border-bottom: 2px solid var(--accent-color);
-    color: var(--hint);
-    padding: 12px 15px;
-    border-radius: 6px 6px 0 0;
-    cursor: not-allowed;
-    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    text-align: center;
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.theme-switcher-disabled:hover {
-    background-color: var(--third-background);
-    color: var(--hint);
-    cursor: not-allowed;
-}
-
-/* File overview section */
-.file-overview {
-    padding: 15px;
-    display: block;
-}
-
-.right-sidebar.collapsed .file-overview {
-    display: none;
-}
-
-.file-overview h3 {
-    color: var(--accent-color);
-    font-size: 16px;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--accent-color);
-}
-
-.file-overview .current-section {
-    background-color: var(--accent-color);
-    color: var(--bg-secondary);
-    padding: 8px 12px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.file-overview .section-list li a {
+/* Hierarchical section list — used by the manual nav (and previously by
+   the right-sidebar file-overview). Chip-style entries replace the default
+   browser indentation, which would otherwise cumulate ~40px per nested
+   level and leave content with no horizontal room. */
+.section-list li a {
     color: inherit;
     text-decoration: none;
     display: block;
     font-size: 13px;
 }
 
-.file-overview .section-list li a:hover {
+.section-list li a:hover {
     color: inherit;
 }
 
-/* File overview section list styling */
-.file-overview .section-list {
+.section-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.file-overview .section-list > li {
+.section-list > li {
     margin-bottom: 6px;
     padding: 6px 8px;
     border-radius: 4px;
@@ -916,20 +876,22 @@ footer {
     transition: all 0.2s ease;
 }
 
-.file-overview .section-list > li:hover {
+.section-list > li:hover {
     background-color: var(--accent-color);
-    color: var(--bg-secondary);
     cursor: pointer;
 }
 
-/* Nested list styling for hierarchy */
-.file-overview .section-list ul {
+.section-list > li:hover > a {
+    color: var(--bg-secondary);
+}
+
+.section-list ul {
     list-style: none;
     padding: 0;
     margin: 8px 0 0 0;
 }
 
-.file-overview .section-list ul li {
+.section-list ul li {
     margin-bottom: 4px;
     padding: 4px 8px 4px 16px;
     border-radius: 3px;
@@ -939,16 +901,19 @@ footer {
     transition: all 0.2s ease;
 }
 
-.file-overview .section-list ul ul li {
+.section-list ul ul li {
     padding-left: 24px;
     font-size: 11px;
     background-color: var(--code-bg);
 }
 
-.file-overview .section-list ul li:hover {
+.section-list ul li:hover {
     background-color: var(--accent-color);
-    color: var(--bg-secondary);
     cursor: pointer;
+}
+
+.section-list ul li:hover > a {
+    color: var(--bg-secondary);
 }
 
 /* Toggle button for sidebar — compact nugget */

@@ -68,9 +68,8 @@ function scrollToSection(sectionId) {
 function updateFileOverview() {
     const sections = document.querySelectorAll('h1, h2, h3');
     const sectionList = document.getElementById('sectionList');
-    const currentSection = document.getElementById('currentSection');
 
-    if (!sectionList || !currentSection) return;
+    if (!sectionList) return;
 
     // Clear existing list
     sectionList.innerHTML = '';

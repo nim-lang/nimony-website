@@ -41,12 +41,6 @@ proc wrapDagonPage(path: string) =
     <link rel="stylesheet" href="$1">
 </head>
 <body>
-    <div class="right-sidebar" id="rightSidebar">
-        <button class="theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
-    </div>
-
-    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">📋</button>
-
     <div class="container">
         <nav>
             <div class="nav-controls">
@@ -56,6 +50,7 @@ proc wrapDagonPage(path: string) =
                 <button class="nav-btn" onclick="navigateToPage('$5')">Installation</button>
                 <button class="nav-btn" onclick="navigateToPage('$6')">Library</button>
                 <button class="nav-btn" onclick="navigateToPage('$7')">FAQ</button>
+                <button class="nav-btn theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
             </div>
             <div class="nav-hierarchy" id="navHierarchy">
                 <div class="nav-section">
@@ -81,8 +76,8 @@ $8
     siteHref(pfx, "style.css"),
     siteHref(pfx, "index.html"),
     siteHref(pfx, "index.html#news"),
-    siteHref(pfx, "manual.html"),
-    siteHref(pfx, "manual.html#installation"),
+    siteHref(pfx, "language.html"),
+    siteHref(pfx, "install.html"),
     siteHref(pfx, "stdlib/theindex.html"),
     siteHref(pfx, "faq.html"),
     content,
@@ -117,11 +112,12 @@ try:
   copyFile "script.js", "site/script.js"
   exec "nimony/bin/nimony -f --outdir:site/stdlib doc nimony/tests/nimony/stdlib/tall.nim"
   postProcessDagonDocs()
-  exec "nim md2html -d:man -o:site/manual.html nimony/doc/manual.md"
+  exec "nim md2html -d:man -o:site/language.html nimony/doc/language.md"
+  exec "nim md2html -d:man -o:site/install.html nimony/doc/install.md"
   exec "nim md2html -o:site/index.html content/index.md"
   exec "nim md2html -o:site/faq.html content/faq.md"
 
-  exec "nim c -r multipage.nim site/manual.html"
+  exec "nim c -r multipage.nim site/language.html"
 finally:
   when defined(local):
     removeDir "nimony"
