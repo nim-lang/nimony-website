@@ -93,4 +93,4 @@ Container-style concepts (e.g. `Findable[T]`) work the same way with iterators a
 
 # News
 
-**2025-11-05** We have our first release! Version 0.2! Read this [article](version0_2.html) for more information.
+**2025-11-01** We have our first release! Version 0.2! Read this [article](version0_2.html) for more information.
