@@ -1,7 +1,7 @@
 # Nimony
 ## Efficient, expressive, elegant
 
-**Why Nimony exists:** the whole compiler is organized around **NIF**, an interchange format you can plug tools into. That plugin ecosystem is what Nimony is *for*—and it also delivers **incremental** and **parallel** builds in a way the classic Nim compiler does not.
+**Why Nimony exists:** the whole compiler is organized around [NIF](https://github.com/nim-lang/nifspec), an interchange format you can plug tools into. That plugin ecosystem is what Nimony is *for*—and it also delivers **incremental** and **parallel** builds in a way the classic Nim compiler does not.
 
 Along the pipeline, Nimony lowers structured programs into **NJ**, an IR where control flow has only **loops** and **`if`**—**no unstructured control flow**. Both **validators** and **code generators** become dramatically simpler to write than against arbitrary CFGs or macros bolted onto the frontend.
 
@@ -15,8 +15,6 @@ With plugins on top of NIF / NJ you can go far beyond a plain compiler driver—
   - compile a **subset of Nim to GPUs**
   - compile toward **FPGAs**
 - **Custom DSLs**, supported more cleanly than in Nim today—for example **lexer** and **parser generators**
-
-The evolving **Nim 3** language (sum types, borrow checking, concepts on generics, …) is absolutely part of the story—but treat those **stricter checks as welcome extras**, not Nimony’s main justification.
 
 For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
