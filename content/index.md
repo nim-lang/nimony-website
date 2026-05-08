@@ -55,15 +55,9 @@ Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a b
 
 (Nimony tightens memory aliasing rules—nice-to-have safety on top of the pipeline story.)
 
-Nimony rejects classic footguns at compile time. Mutable arguments must not alias each other or overlap paths into the same storage:
+Nimony rejects classic footguns at compile time:
 
 ```nim
-proc swap(a, b: var int) =
-  let t = a; a = b; b = t
-
-var x = 1
-# swap(x, x)   # Error: mutable arguments alias
-
 proc grow(s: var seq[int]; use: int) =
   s.add use
 
@@ -78,7 +72,7 @@ This follows **prefix exclusion**: while `s` (or `s.elements`) is borrowed, that
 
 ## Concepts describe what generics need
 
-Concepts list required operations; generics use them so APIs are checked at definition and instantiation—not duck typing at link time:
+Concepts list required operations; generics use them so APIs are checked at definition and instantiation—duck typing for containers is gone:
 
 ```nim
 type
@@ -94,16 +88,9 @@ echo min("b", "a")
 
 Container-style concepts (e.g. `Findable[T]`) work the same way with iterators and indexed access—see **Concepts** and **Generics** in the [manual](manual.html).
 
-----
-
-## Nim DNA — tooling-friendly configuration
-
-Nimony aims at reproducible builds and tooling: separate `nimony.args`, `nimony.paths`, and `$compiler.args`-style files next to your project, derived keys from `--cc` / `--linker` prefixes instead of a fixed compiler whitelist.
-
-Full installation and CLI usage: [manual](manual.html#installation).
 
 ----
 
 # News
 
-We have our first release! Version 0.2! Read this [article](version0_2.html) for more information.
+**2025-11-05** We have our first release! Version 0.2! Read this [article](version0_2.html) for more information.
