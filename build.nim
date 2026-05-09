@@ -127,7 +127,7 @@ proc ensureNimonyViaHastur(nimonyDir: string): string =
     let hasturExe = hasturExePath(nimonyDir)
     if not fileExists(hasturExe):
       createDir(nimonyDir / "bin")
-      exec "nim c -d:release --out:" & hasturExe & " " & nimonyDir / "src/hastur.nim"
+      exec "nim c -d:release --warning[ProveInit]:off --out:" & hasturExe & " " & nimonyDir / "src/hastur.nim"
     exec hasturExe.quoteShell & " build all"
     if not fileExists(result):
       quit "FAILURE: hastur build all did not produce " & result
