@@ -104,25 +104,26 @@ proc buildArticles =
     copyFile file, "site/" & dest & ".gif"
 
 when defined(local):
-  copyDir "../nimony", "nimony"
+  const nimonyDir = "../nimony"
+else:
+  const nimonyDir = "nimony"
 
-try:
-  removeDir "site"
-except:
-  discard "fine"
-try:
+proc main() =
+  try:
+    removeDir "site"
+  except:
+    discard "fine"
   createDir "site"
   buildArticles()
   copyFile "style.css", "site/style.css"
   copyFile "script.js", "site/script.js"
-  exec "nimony/bin/nimony -f --outdir:site/stdlib doc nimony/tests/nimony/stdlib/tall.nim"
+  exec nimonyDir & "/bin/nimony -f --outdir:site/stdlib doc " & nimonyDir & "/tests/nimony/stdlib/tall.nim"
   postProcessDagonDocs()
-  exec "nim md2html -d:man -o:site/language.html nimony/doc/language.md"
-  exec "nim md2html -o:site/install.html nimony/doc/install.md"
+  exec "nim md2html -d:man -o:site/language.html " & nimonyDir & "/doc/language.md"
+  exec "nim md2html -o:site/install.html " & nimonyDir & "/doc/install.md"
   exec "nim md2html -o:site/index.html content/index.md"
   exec "nim md2html -o:site/faq.html content/faq.md"
 
   exec "nim c -r multipage.nim site/language.html"
-finally:
-  when defined(local):
-    removeDir "nimony"
+
+main()
