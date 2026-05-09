@@ -138,7 +138,9 @@ proc ensureNimonyViaHastur(nimonyDir: string): string =
       # hastur invokes `nim c src/nifler/...`; CWD must be the nimony tree root.
       execInDir(nimonyDir, "nim c -d:release --warning[ProveInit]:off --out:bin/" &
           ("hastur" & ExeExt) & " src/hastur.nim")
-    execInDir(nimonyDir, hasturExe.quoteShell & " build all")
+    # CWD is nimony root here; use bin/hastur not nimonyDir/bin/hastur (avoids nimony/nimony/...).
+    let hasturInTree = "bin" / ("hastur" & ExeExt)
+    execInDir(nimonyDir, hasturInTree.quoteShell & " build all")
     if not fileExists(result):
       quit "FAILURE: hastur build all did not produce " & result
 
