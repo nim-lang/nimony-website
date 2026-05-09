@@ -115,6 +115,23 @@ proc buildLocalConfiguredDoc(src, dest: string; man = false) =
     except:
       discard
 
+proc nimonyExePath(nimonyDir: string): string =
+  nimonyDir / "bin" / ("nimony" & ExeExt)
+
+proc hasturExePath(nimonyDir: string): string =
+  nimonyDir / "bin" / ("hastur" & ExeExt)
+
+proc ensureNimonyViaHastur(nimonyDir: string): string =
+  result = nimonyExePath(nimonyDir)
+  if not fileExists(result):
+    let hasturExe = hasturExePath(nimonyDir)
+    if not fileExists(hasturExe):
+      createDir(nimonyDir / "bin")
+      exec "nim c -d:release --out:" & hasturExe & " " & nimonyDir / "src/hastur.nim"
+    exec hasturExe.quoteShell & " build all"
+    if not fileExists(result):
+      quit "FAILURE: hastur build all did not produce " & result
+
 when defined(local):
   const nimonyDir = "../nimony"
 else:
@@ -129,7 +146,8 @@ proc main() =
   buildArticles()
   copyFile "style.css", "site/style.css"
   copyFile "script.js", "site/script.js"
-  exec nimonyDir & "/bin/nimony -f --outdir:site/stdlib doc " & nimonyDir & "/tests/nimony/stdlib/tall.nim"
+  let nimonyExe = ensureNimonyViaHastur(nimonyDir)
+  exec nimonyExe & " -f --outdir:site/stdlib doc " & nimonyDir & "/tests/nimony/stdlib/tall.nim"
   postProcessDagonDocs()
   buildLocalConfiguredDoc(nimonyDir & "/doc/language.md", "language.html", man = true)
   buildLocalConfiguredDoc(nimonyDir & "/doc/install.md", "install.html")
