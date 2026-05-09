@@ -7,6 +7,14 @@ proc exec(cmd: string) =
   if execShellCmd(cmd) != 0:
     quit "FAILURE: " & cmd
 
+proc execInDir(dir: string; cmd: string) =
+  let old = getCurrentDir()
+  setCurrentDir(dir)
+  try:
+    exec(cmd)
+  finally:
+    setCurrentDir(old)
+
 proc relToSiteRoot(path: string): string =
   let dir = path.splitFile.dir
   var rel = relativePath("site", dir).replace('\\', '/')
@@ -127,8 +135,10 @@ proc ensureNimonyViaHastur(nimonyDir: string): string =
     let hasturExe = hasturExePath(nimonyDir)
     if not fileExists(hasturExe):
       createDir(nimonyDir / "bin")
-      exec "nim c -d:release --warning[ProveInit]:off --out:" & hasturExe & " " & nimonyDir / "src/hastur.nim"
-    exec hasturExe.quoteShell & " build all"
+      # hastur invokes `nim c src/nifler/...`; CWD must be the nimony tree root.
+      execInDir(nimonyDir, "nim c -d:release --warning[ProveInit]:off --out:bin/" &
+          ("hastur" & ExeExt) & " src/hastur.nim")
+    execInDir(nimonyDir, hasturExe.quoteShell & " build all")
     if not fileExists(result):
       quit "FAILURE: hastur build all did not produce " & result
 
