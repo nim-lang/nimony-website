@@ -103,6 +103,18 @@ proc buildArticles =
     let dest = file.splitFile.name
     copyFile file, "site/" & dest & ".gif"
 
+proc buildLocalConfiguredDoc(src, dest: string; man = false) =
+  let tempName = "content/tmp_" & dest.splitFile.name & ".md"
+  writeFile(tempName, readFile(src))
+  let manFlag = if man: " -d:man" else: ""
+  try:
+    exec "nim md2html" & manFlag & " -o:site/" & dest & " " & tempName
+  finally:
+    try:
+      removeFile(tempName)
+    except:
+      discard
+
 when defined(local):
   const nimonyDir = "../nimony"
 else:
@@ -119,8 +131,8 @@ proc main() =
   copyFile "script.js", "site/script.js"
   exec nimonyDir & "/bin/nimony -f --outdir:site/stdlib doc " & nimonyDir & "/tests/nimony/stdlib/tall.nim"
   postProcessDagonDocs()
-  exec "nim md2html -d:man -o:site/language.html " & nimonyDir & "/doc/language.md"
-  exec "nim md2html -o:site/install.html " & nimonyDir & "/doc/install.md"
+  buildLocalConfiguredDoc(nimonyDir & "/doc/language.md", "language.html", man = true)
+  buildLocalConfiguredDoc(nimonyDir & "/doc/install.md", "install.html")
   exec "nim md2html -o:site/index.html content/index.md"
   exec "nim md2html -o:site/faq.html content/faq.md"
 

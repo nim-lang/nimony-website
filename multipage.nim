@@ -16,7 +16,7 @@ const
 <body>
     <div class="container">
         <header class="nav-controls" style="font-size: smaller;">
-            <button class="nav-btn" onclick="navigateToPage('manual.html')">Single Page</button>
+            <button class="nav-btn" onclick="navigateToPage('language.html')">Single Page</button>
             <button class="nav-btn" onclick="navigateToPage('stdlib/theindex.html')">Library</button>
             <button class="nav-btn" onclick="navigateToPage('faq.html')">FAQ</button>
             <button class="nav-btn theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
