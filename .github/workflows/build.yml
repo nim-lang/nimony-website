@@ -40,6 +40,7 @@ jobs:
           repository: nim-lang/nimony
           path: nimony
           ref: master
+          submodules: recursive
           fetch-depth: 0  # Get full history to check for changes
 
       - name: Check for changes in nimony
