@@ -123,26 +123,31 @@ proc buildLocalConfiguredDoc(src, dest: string; man = false) =
     except:
       discard
 
-proc nimonyExePath(nimonyDir: string): string =
-  nimonyDir / "bin" / ("nimony" & ExeExt)
+proc toolExePath(nimonyDir, tool: string): string =
+  nimonyDir / "bin" / (tool & ExeExt)
 
-proc hasturExePath(nimonyDir: string): string =
-  nimonyDir / "bin" / ("hastur" & ExeExt)
+proc buildNimonyTool(nimonyDir, tool, source: string) =
+  let exe = "bin" / (tool & ExeExt)
+  execInDir(nimonyDir, "nim c -d:release --warning[ProveInit]:off --out:" &
+      exe.quoteShell & " " & source.quoteShell)
 
-proc ensureNimonyViaHastur(nimonyDir: string): string =
-  result = nimonyExePath(nimonyDir)
+proc ensureNimonyDocTools(nimonyDir: string): string =
+  const docTools = [
+    ("nifler", "src/nifler/nifler.nim"),
+    ("nimsem", "src/nimony/nimsem.nim"),
+    ("nifmake", "src/nifmake/nifmake.nim"),
+    ("dagon", "src/dagon/dagon.nim"),
+    ("nimony", "src/nimony/nimony.nim")
+  ]
+
+  createDir(nimonyDir / "bin")
+  for (tool, source) in docTools:
+    if not fileExists(toolExePath(nimonyDir, tool)):
+      buildNimonyTool(nimonyDir, tool, source)
+
+  result = toolExePath(nimonyDir, "nimony")
   if not fileExists(result):
-    let hasturExe = hasturExePath(nimonyDir)
-    if not fileExists(hasturExe):
-      createDir(nimonyDir / "bin")
-      # hastur invokes `nim c src/nifler/...`; CWD must be the nimony tree root.
-      execInDir(nimonyDir, "nim c -d:release --warning[ProveInit]:off --out:bin/" &
-          ("hastur" & ExeExt) & " src/hastur.nim")
-    # CWD is nimony root here; use bin/hastur not nimonyDir/bin/hastur (avoids nimony/nimony/...).
-    let hasturInTree = "bin" / ("hastur" & ExeExt)
-    execInDir(nimonyDir, hasturInTree.quoteShell & " build all")
-    if not fileExists(result):
-      quit "FAILURE: hastur build all did not produce " & result
+    quit "FAILURE: building Nimony doc tools did not produce " & result
 
 when defined(local):
   const nimonyDir = "../nimony"
@@ -158,7 +163,7 @@ proc main() =
   buildArticles()
   copyFile "style.css", "site/style.css"
   copyFile "script.js", "site/script.js"
-  let nimonyExe = ensureNimonyViaHastur(nimonyDir)
+  let nimonyExe = ensureNimonyDocTools(nimonyDir)
   exec nimonyExe & " -f --outdir:site/stdlib doc " & nimonyDir & "/tests/nimony/stdlib/tall.nim"
   postProcessDagonDocs()
   buildLocalConfiguredDoc(nimonyDir & "/doc/language.md", "language.html", man = true)
