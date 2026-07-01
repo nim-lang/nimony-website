@@ -2,8 +2,10 @@ name: Nimony nightly builds
 
 # Builds the Nimony toolchain from nim-lang/nimony's master branch on a matrix
 # of platforms and publishes redistributable binary archives to this repo's
-# GitHub Releases under a rolling `nightly` tag. The docs/Pages build lives in
-# build.yml and is intentionally kept separate.
+# GitHub Releases. Each run creates one versioned release per nimony commit
+# (tag `nightly-<version>-<commit>`, version from nimony's doc/version.md), so
+# download URLs pin an exact revision. The docs/Pages build lives in build.yml
+# and is intentionally kept separate.
 
 on:
   workflow_dispatch:
@@ -28,16 +30,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # ── Decide whether to build and make sure the rolling release exists ────────
+  # ── Resolve the version/commit and create the per-commit release ────────────
   prepare:
     runs-on: ubuntu-24.04
     outputs:
       commit: ${{ steps.decide.outputs.commit }}
       short: ${{ steps.decide.outputs.short }}
       date: ${{ steps.decide.outputs.date }}
+      version: ${{ steps.decide.outputs.version }}
+      tag: ${{ steps.decide.outputs.tag }}
       deploy: ${{ steps.decide.outputs.deploy }}
     steps:
-      - name: Determine nimony master commit and deploy decision
+      - name: Determine nimony version/commit and deploy decision
         id: decide
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,20 +55,35 @@ jobs:
           fi
           short=${commit:0:9}
           date=$(date -u +'%Y-%m-%d')
-          echo "commit=$commit"  >> "$GITHUB_OUTPUT"
-          echo "short=$short"     >> "$GITHUB_OUTPUT"
-          echo "date=$date"       >> "$GITHUB_OUTPUT"
 
-          # The last successfully-published commit is recorded in the release
-          # body as a `nimony-commit: <sha>` line (written by the finalize job).
-          last=""
-          if body=$(gh release view nightly --repo "$GITHUB_REPOSITORY" --json body -q .body 2>/dev/null); then
-            last=$(printf '%s\n' "$body" | sed -n 's/^nimony-commit: //p' | head -n1)
+          # The canonical Nimony version is doc/version.md (the same file every
+          # tool `slurp`s for its --version). Read it at the resolved commit.
+          version=$(curl -fsSL "https://raw.githubusercontent.com/nim-lang/nimony/$commit/doc/version.md" | tr -d '[:space:]')
+          if [ -z "$version" ]; then
+            echo "Could not read doc/version.md at $commit" >&2
+            exit 1
           fi
 
+          # One release per commit — the tag carries the version and hash, so
+          # download URLs are versioned (never stale/rolling).
+          tag="nightly-$version-$short"
+
+          echo "commit=$commit"   >> "$GITHUB_OUTPUT"
+          echo "short=$short"      >> "$GITHUB_OUTPUT"
+          echo "date=$date"        >> "$GITHUB_OUTPUT"
+          echo "version=$version"  >> "$GITHUB_OUTPUT"
+          echo "tag=$tag"          >> "$GITHUB_OUTPUT"
+
+          # Skip a scheduled run only when this exact commit is already fully
+          # published (all 4 platform assets present). A partial/failed prior
+          # run has fewer assets and will retry.
+          assets=0
+          if count=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets | length' 2>/dev/null); then
+            assets=$count
+          fi
           deploy=true
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$last" = "$commit" ]; then
-            echo "nimony master unchanged since last nightly ($commit); skipping."
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$assets" -ge 4 ]; then
+            echo "$tag already has $assets assets; nothing new to build."
             deploy=false
           fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force }}" = "true" ]; then
@@ -72,18 +91,19 @@ jobs:
           fi
           echo "deploy=$deploy" >> "$GITHUB_OUTPUT"
 
-      - name: Ensure the rolling `nightly` release exists
+      - name: Create the release for this commit
         if: steps.decide.outputs.deploy == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          if ! gh release view nightly --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            gh release create nightly \
+          tag='${{ steps.decide.outputs.tag }}'
+          if ! gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$tag" \
               --repo "$GITHUB_REPOSITORY" \
-              --title "Nimony nightly" \
+              --title "Nimony ${{ steps.decide.outputs.version }} nightly (${{ steps.decide.outputs.date }})" \
               --prerelease \
-              --notes "Nimony nightly builds. Assets are refreshed on each successful run."
+              --notes "Nightly build of nim-lang/nimony @ ${{ steps.decide.outputs.commit }} (version ${{ steps.decide.outputs.version }}, ${{ steps.decide.outputs.date }})."
           fi
 
   # ── Build + package the toolchain per platform ─────────────────────────────
@@ -101,7 +121,7 @@ jobs:
     name: '${{ matrix.os }}-${{ matrix.cpu }}'
     runs-on: ${{ matrix.runner }}
     env:
-      ASSET: nimony-${{ matrix.os }}_${{ matrix.cpu }}.${{ matrix.ext }}
+      ASSET: nimony-${{ needs.prepare.outputs.version }}-${{ needs.prepare.outputs.short }}-${{ matrix.os }}_${{ matrix.cpu }}.${{ matrix.ext }}
     steps:
       - name: Set `core.autocrlf` to false
         run: |
@@ -281,13 +301,13 @@ jobs:
           fi
           ls -lh out
 
-      - name: Upload asset to the nightly release
+      - name: Upload asset to the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
-          gh release upload nightly "out/$ASSET" --repo "$GITHUB_REPOSITORY" --clobber
+          gh release upload '${{ needs.prepare.outputs.tag }}' "out/$ASSET" --repo "$GITHUB_REPOSITORY" --clobber
 
       - name: Upload asset as workflow artifact
         uses: actions/upload-artifact@v4
@@ -295,35 +315,33 @@ jobs:
           name: ${{ env.ASSET }}
           path: out/${{ env.ASSET }}
 
-  # ── Record the built commit once every platform succeeded ──────────────────
+  # ── Fill in the release notes once every platform succeeded ────────────────
   finalize:
     needs: [ prepare, build ]
     if: needs.prepare.outputs.deploy == 'true'
     runs-on: ubuntu-24.04
+    env:
+      V: ${{ needs.prepare.outputs.version }}
+      S: ${{ needs.prepare.outputs.short }}
     steps:
-      - name: Update nightly release notes
+      - name: Update release notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          # The `nimony-commit:` line is what `prepare` reads next run to skip
-          # rebuilding an unchanged master. Writing it here (after all platform
-          # jobs succeeded) keeps the recorded commit in sync with the assets.
           notes=$(cat <<EOF
-          Rolling Nimony nightly build. Assets below are refreshed on each successful run and have stable filenames, so their download URLs are permanent.
-
-          nimony-commit: ${{ needs.prepare.outputs.commit }}
-          date: ${{ needs.prepare.outputs.date }}
+          Nightly build of nim-lang/nimony @ ${{ needs.prepare.outputs.commit }}
+          version ${V} · ${{ needs.prepare.outputs.date }}
 
           Downloads:
-          - Linux x86_64:  nimony-linux_amd64.tar.xz
-          - Linux ARM64:   nimony-linux_arm64.tar.xz
-          - macOS ARM64:   nimony-macos_arm64.tar.xz
-          - Windows x86_64: nimony-windows_amd64.zip
+          - Linux x86_64:   nimony-${V}-${S}-linux_amd64.tar.xz
+          - Linux ARM64:    nimony-${V}-${S}-linux_arm64.tar.xz
+          - macOS ARM64:    nimony-${V}-${S}-macos_arm64.tar.xz
+          - Windows x86_64: nimony-${V}-${S}-windows_amd64.zip
 
           Extract, add bin/ to your PATH, and ensure a C compiler is available.
           On Windows, run 'hastur install' from the extracted directory to fetch
           the MinGW+LLVM toolchain.
           EOF
           )
-          gh release edit nightly --repo "$GITHUB_REPOSITORY" --notes "$notes"
+          gh release edit '${{ needs.prepare.outputs.tag }}' --repo "$GITHUB_REPOSITORY" --notes "$notes"
