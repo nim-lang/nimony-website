@@ -1,0 +1,329 @@
+name: Nimony nightly builds
+
+# Builds the Nimony toolchain from nim-lang/nimony's master branch on a matrix
+# of platforms and publishes redistributable binary archives to this repo's
+# GitHub Releases under a rolling `nightly` tag. The docs/Pages build lives in
+# build.yml and is intentionally kept separate.
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Build even if nimony master is unchanged since the last nightly"
+        type: boolean
+        default: false
+  schedule:
+    # 08:00 UTC daily. (GitHub cron is always UTC — adjust the hour if you want
+    # 08:00 in a specific local timezone.)
+    - cron: '0 8 * * *'
+
+# Publishing to this repo's own Releases only needs contents:write, so the
+# built-in GITHUB_TOKEN suffices — no cross-repo PAT required.
+permissions:
+  contents: write
+
+# Never let two nightly runs race on the shared `nightly` release.
+concurrency:
+  group: nimony-nightly
+  cancel-in-progress: false
+
+jobs:
+  # ── Decide whether to build and make sure the rolling release exists ────────
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      commit: ${{ steps.decide.outputs.commit }}
+      short: ${{ steps.decide.outputs.short }}
+      date: ${{ steps.decide.outputs.date }}
+      deploy: ${{ steps.decide.outputs.deploy }}
+    steps:
+      - name: Determine nimony master commit and deploy decision
+        id: decide
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          commit=$(git ls-remote https://github.com/nim-lang/nimony master | cut -f1)
+          if [ -z "$commit" ]; then
+            echo "Could not resolve nim-lang/nimony master HEAD" >&2
+            exit 1
+          fi
+          short=${commit:0:9}
+          date=$(date -u +'%Y-%m-%d')
+          echo "commit=$commit"  >> "$GITHUB_OUTPUT"
+          echo "short=$short"     >> "$GITHUB_OUTPUT"
+          echo "date=$date"       >> "$GITHUB_OUTPUT"
+
+          # The last successfully-published commit is recorded in the release
+          # body as a `nimony-commit: <sha>` line (written by the finalize job).
+          last=""
+          if body=$(gh release view nightly --repo "$GITHUB_REPOSITORY" --json body -q .body 2>/dev/null); then
+            last=$(printf '%s\n' "$body" | sed -n 's/^nimony-commit: //p' | head -n1)
+          fi
+
+          deploy=true
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$last" = "$commit" ]; then
+            echo "nimony master unchanged since last nightly ($commit); skipping."
+            deploy=false
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force }}" = "true" ]; then
+            deploy=true
+          fi
+          echo "deploy=$deploy" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure the rolling `nightly` release exists
+        if: steps.decide.outputs.deploy == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if ! gh release view nightly --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create nightly \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "Nimony nightly" \
+              --prerelease \
+              --notes "Nimony nightly builds. Assets are refreshed on each successful run."
+          fi
+
+  # ── Build + package the toolchain per platform ─────────────────────────────
+  build:
+    needs: prepare
+    if: needs.prepare.outputs.deploy == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: linux,   cpu: amd64, runner: ubuntu-24.04,     ext: tar.xz }
+          - { os: linux,   cpu: arm64, runner: ubuntu-24.04-arm, ext: tar.xz }
+          - { os: macos,   cpu: arm64, runner: macos-15,         ext: tar.xz }
+          - { os: windows, cpu: amd64, runner: windows-2025,     ext: zip }
+    name: '${{ matrix.os }}-${{ matrix.cpu }}'
+    runs-on: ${{ matrix.runner }}
+    env:
+      ASSET: nimony-${{ matrix.os }}_${{ matrix.cpu }}.${{ matrix.ext }}
+    steps:
+      - name: Set `core.autocrlf` to false
+        run: |
+          git config --global core.autocrlf false
+          git config --global init.defaultBranch master
+
+      - name: Disable Defender real-time scan for workspace (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Continue'
+          Add-MpPreference -ExclusionPath "${{ github.workspace }}" -ErrorAction SilentlyContinue
+          Add-MpPreference -ExclusionPath "$env:USERPROFILE\nimcache" -ErrorAction SilentlyContinue
+          Add-MpPreference -ExclusionPath "$env:TEMP" -ErrorAction SilentlyContinue
+          foreach ($p in @('nim.exe','nimony.exe','nimsem.exe','hexer.exe','lengc.exe','nifler.exe','nifmake.exe','gcc.exe','g++.exe','ld.exe','as.exe','ar.exe','make.exe')) {
+            Add-MpPreference -ExclusionProcess $p -ErrorAction SilentlyContinue
+          }
+
+      - name: Checkout nim-lang/nimony
+        # Into `nimony/` (not `nif/`): sibling-relative paths in the sources
+        # assume this working-tree directory name, matching dev machines.
+        uses: actions/checkout@v5
+        with:
+          repository: nim-lang/nimony
+          path: nimony
+          ref: ${{ needs.prepare.outputs.commit }}
+          submodules: recursive   # vendor/mimalloc
+
+      # ── platform build dependencies ─────────────────────────────────────────
+      - name: Install Linux dependencies (gcc-14)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-14 g++-14
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 60 --slave /usr/bin/g++ g++ /usr/bin/g++-14
+
+      - name: Restore MinGW-W64 (Windows) from cache
+        if: runner.os == 'Windows'
+        id: windows-mingw-cache
+        uses: actions/cache@v5
+        with:
+          path: external/mingw-${{ matrix.cpu }}
+          key: 'mingw-${{ matrix.cpu }}-gcc14-llvm19'
+
+      - name: Restore Nim DLLs (Windows) from cache
+        if: runner.os == 'Windows'
+        id: windows-dlls-cache
+        uses: actions/cache@v5
+        with:
+          path: external/dlls-${{ matrix.cpu }}
+          key: 'dlls-${{ matrix.cpu }}'
+
+      - name: Install MinGW64 (Windows)
+        if: runner.os == 'Windows' && steps.windows-mingw-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p external
+          MINGW_URL="https://github.com/brechtsanders/winlibs_mingw/releases/download/14.2.0posix-19.1.7-12.0.0-msvcrt-r3/winlibs-x86_64-posix-seh-gcc-14.2.0-llvm-19.1.7-mingw-w64msvcrt-12.0.0-r3.7z"
+          curl -L "$MINGW_URL" -o "external/mingw-${{ matrix.cpu }}.7z"
+          7z x -y "external/mingw-${{ matrix.cpu }}.7z" -oexternal/
+          mv external/mingw64 external/mingw-${{ matrix.cpu }}
+
+      - name: Install DLLs (Windows)
+        if: runner.os == 'Windows' && steps.windows-dlls-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          mkdir -p external
+          curl -L "https://nim-lang.org/download/windeps.zip" -o external/windeps.zip
+          7z x -y external/windeps.zip -oexternal/dlls-${{ matrix.cpu }}
+
+      - name: Put Windows toolchain on PATH
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo '${{ github.workspace }}'"/external/mingw-${{ matrix.cpu }}/bin" >> "$GITHUB_PATH"
+          echo '${{ github.workspace }}'"/external/dlls-${{ matrix.cpu }}"      >> "$GITHUB_PATH"
+
+      - name: Install make (Windows)
+        if: runner.os == 'Windows'
+        uses: crazy-max/ghaction-chocolatey@v4
+        with:
+          args: install make
+
+      # ── host Nim (matches nimony's ci.yml) ──────────────────────────────────
+      - name: Setup Nim
+        uses: alaviss/setup-nim@0.1.1
+        with:
+          path: 'nim'
+          version: devel
+          architecture: ${{ matrix.cpu }}
+
+      - name: Overlay current Nim compiler source (devel parser fixes)
+        shell: bash
+        run: |
+          # setup-nim installs a prebuilt nightly which can lag `devel` by weeks.
+          # nifler compiles Nim's own compiler/parser.nim (resolved via `--path:$nim`,
+          # see nimony/src/nifler/nim.cfg), so newer syntax needs fresh compiler
+          # sources overlaid on top of the nightly's bin/nim bootstrap.
+          git clone --depth 1 --branch devel https://github.com/nim-lang/Nim nim-src
+          cp -a nim-src/compiler/. nim/compiler/
+
+      - name: Cache host-Nim build artifacts
+        uses: actions/cache@v5
+        with:
+          path: |
+            nimony/bin
+            ~/.cache/nim
+            ~/nimcache
+          key: nimony-nightly-${{ runner.os }}-${{ matrix.cpu }}-${{ needs.prepare.outputs.commit }}
+          restore-keys: |
+            nimony-nightly-${{ runner.os }}-${{ matrix.cpu }}-
+
+      - name: Create dist/nimony symlink for Nim compiler
+        shell: bash
+        run: |
+          rm -rf nim/dist/nimony
+          mkdir -p nim/dist
+          ln -sf "${{ github.workspace }}/nimony" nim/dist/nimony
+
+      - name: Build Nimony toolchain
+        shell: bash
+        run: |
+          cd nimony
+          nim c -r src/hastur --release build all
+
+      # ── package ─────────────────────────────────────────────────────────────
+      - name: Stage redistributable package
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Layout the compiler expects, relative to the parent of bin/:
+          #   bin/            built tools (nimony, nimsem, hexer, nifler, nifmake, ...)
+          #   lib/            stdlib (found via getAppDir().parentDir()/lib)
+          #   src/lib/        NIF libraries used by macros/plugins (semos/macro_plugin)
+          #   vendor/mimalloc mimalloc's static.c is {.compile.}d into every user program
+          stage="staging/nimony"
+          mkdir -p "$stage/src" "$stage/vendor"
+          cp -r nimony/bin            "$stage/bin"
+          cp -r nimony/lib            "$stage/lib"
+          cp -r nimony/src/lib        "$stage/src/lib"
+          cp -r nimony/vendor/mimalloc "$stage/vendor/mimalloc"
+          cp nimony/README.md nimony/license.txt "$stage/" 2>/dev/null || true
+
+          cat > "$stage/NIGHTLY.txt" <<EOF
+          Nimony nightly build
+          nimony-commit: ${{ needs.prepare.outputs.commit }}
+          date:          ${{ needs.prepare.outputs.date }}
+          platform:      ${{ matrix.os }}_${{ matrix.cpu }}
+
+          Add bin/ to your PATH to use the compiler and tools.
+          A C compiler (gcc or clang) must be available on PATH.
+          On Windows, run 'hastur install' from this directory to download the
+          bundled MinGW+LLVM toolchain into external/.
+          EOF
+
+      - name: Smoke test the packaged toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Compile & run a hello-world using ONLY the staged tree, proving the
+          # packaged file set is self-contained before we publish it.
+          printf 'import std/syncio\necho "hello from nimony nightly"\n' > hello.nim
+          ext=""
+          if [ "${{ runner.os }}" = "Windows" ]; then ext=".exe"; fi
+          "staging/nimony/bin/nimony$ext" c -r hello.nim
+
+      - name: Create archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          if [ "${{ matrix.ext }}" = "zip" ]; then
+            ( cd staging && 7z a -tzip -mx=9 "${{ github.workspace }}/out/$ASSET" nimony >/dev/null )
+          else
+            tar -C staging -cJf "out/$ASSET" nimony
+          fi
+          ls -lh out
+
+      - name: Upload asset to the nightly release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release upload nightly "out/$ASSET" --repo "$GITHUB_REPOSITORY" --clobber
+
+      - name: Upload asset as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ASSET }}
+          path: out/${{ env.ASSET }}
+
+  # ── Record the built commit once every platform succeeded ──────────────────
+  finalize:
+    needs: [ prepare, build ]
+    if: needs.prepare.outputs.deploy == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Update nightly release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          # The `nimony-commit:` line is what `prepare` reads next run to skip
+          # rebuilding an unchanged master. Writing it here (after all platform
+          # jobs succeeded) keeps the recorded commit in sync with the assets.
+          notes=$(cat <<EOF
+          Rolling Nimony nightly build. Assets below are refreshed on each successful run and have stable filenames, so their download URLs are permanent.
+
+          nimony-commit: ${{ needs.prepare.outputs.commit }}
+          date: ${{ needs.prepare.outputs.date }}
+
+          Downloads:
+          - Linux x86_64:  nimony-linux_amd64.tar.xz
+          - Linux ARM64:   nimony-linux_arm64.tar.xz
+          - macOS ARM64:   nimony-macos_arm64.tar.xz
+          - Windows x86_64: nimony-windows_amd64.zip
+
+          Extract, add bin/ to your PATH, and ensure a C compiler is available.
+          On Windows, run 'hastur install' from the extracted directory to fetch
+          the MinGW+LLVM toolchain.
+          EOF
+          )
+          gh release edit nightly --repo "$GITHUB_REPOSITORY" --notes "$notes"

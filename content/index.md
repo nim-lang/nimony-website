@@ -18,6 +18,17 @@ With plugins on top of NIF / NJ you can go far beyond a plain compiler driver—
 
 For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
+## Nightly builds
+
+Prebuilt toolchains are published every day and refreshed on each successful build — the download links below are permanent:
+
+- [Linux x86_64](https://github.com/nim-lang/nimony-website/releases/download/nightly/nimony-linux_amd64.tar.xz)
+- [Linux ARM64](https://github.com/nim-lang/nimony-website/releases/download/nightly/nimony-linux_arm64.tar.xz)
+- [macOS ARM64](https://github.com/nim-lang/nimony-website/releases/download/nightly/nimony-macos_arm64.tar.xz)
+- [Windows x86_64](https://github.com/nim-lang/nimony-website/releases/download/nightly/nimony-windows_amd64.zip)
+
+Extract the archive, add its `bin/` directory to your `PATH`, and make sure a C compiler (`gcc` or `clang`) is available. On Windows, run `hastur install` from the extracted directory to fetch the bundled MinGW+LLVM toolchain. See the [full release list](https://github.com/nim-lang/nimony-website/releases/tag/nightly) or [build from source](install.html).
+
 Below are small **language** sketches Nimony emphasizes alongside that toolchain story.
 
 ----
