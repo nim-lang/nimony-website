@@ -223,6 +223,50 @@ function navigateToPage(filename) {
     window.location.href = filename;
 }
 
+function getPageNavTarget(button) {
+    const onclick = button.getAttribute('onclick');
+    if (!onclick) return null;
+    const match = onclick.match(/navigateToPage\('([^']+)'\)/);
+    return match ? match[1] : null;
+}
+
+function triggerPageNavButton(button) {
+    if (!button || button.classList.contains('nav-btn-disabled')) return;
+    const target = getPageNavTarget(button);
+    if (target) navigateToPage(target);
+}
+
+function setupPageNavKeyboard() {
+    const pageNav = document.querySelector('.page-nav');
+    if (!pageNav) return;
+
+    const buttons = pageNav.querySelectorAll('button.nav-btn');
+    if (buttons.length < 2) return;
+
+    const prevBtn = buttons[0];
+    const nextBtn = buttons[1];
+
+    document.addEventListener('keydown', function(event) {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+
+        const target = event.target;
+        const tagName = target.tagName;
+        if (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT' || target.isContentEditable) {
+            return;
+        }
+
+        if (event.key === 'ArrowLeft') {
+            if (prevBtn.classList.contains('nav-btn-disabled')) return;
+            event.preventDefault();
+            triggerPageNavButton(prevBtn);
+        } else if (event.key === 'ArrowRight') {
+            if (nextBtn.classList.contains('nav-btn-disabled')) return;
+            event.preventDefault();
+            triggerPageNavButton(nextBtn);
+        }
+    });
+}
+
 // Load saved preferences and initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     // Load saved theme preference
@@ -231,9 +275,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (savedTheme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        button.textContent = '🌙 Light';
-        button.title = 'Switch to light theme';
-    } else {
+        if (button) {
+            button.textContent = '🌙 Light';
+            button.title = 'Switch to light theme';
+        }
+    } else if (button) {
         button.textContent = '🌙 Dark';
         button.title = 'Switch to dark theme';
     }
@@ -243,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('rightSidebar');
     const toggleBtn = document.getElementById('sidebarToggle');
 
-    if (savedSidebarCollapsed === 'true') {
+    if (savedSidebarCollapsed === 'true' && sidebar && toggleBtn) {
         sidebar.classList.add('collapsed');
         toggleBtn.style.display = 'block';
     }
@@ -251,6 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize file overview
     updateFileOverview();
     setupIntersectionObserver();
+    setupPageNavKeyboard();
 
     // Update current section on scroll
     window.addEventListener('scroll', updateCurrentSection);
