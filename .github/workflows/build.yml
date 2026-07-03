@@ -26,7 +26,7 @@ jobs:
       has_changes: ${{ steps.check-changes.outputs.has_changes }}
     steps:
       - name: Checkout this repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -35,7 +35,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout nim-lang/nimony (docs)
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: nim-lang/nimony
           path: nimony
