@@ -143,7 +143,7 @@ jobs:
       - name: Checkout nim-lang/nimony
         # Into `nimony/` (not `nif/`): sibling-relative paths in the sources
         # assume this working-tree directory name, matching dev machines.
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: nim-lang/nimony
           path: nimony
