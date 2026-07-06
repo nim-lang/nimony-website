@@ -310,7 +310,7 @@ jobs:
           gh release upload '${{ needs.prepare.outputs.tag }}' "out/$ASSET" --repo "$GITHUB_REPOSITORY" --clobber
 
       - name: Upload asset as workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.ASSET }}
           path: out/${{ env.ASSET }}
