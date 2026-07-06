@@ -8,16 +8,20 @@ name: Nimony nightly builds
 # and is intentionally kept separate.
 
 on:
-  workflow_dispatch:
-    inputs:
-      force:
-        description: "Build even if nimony master is unchanged since the last nightly"
-        type: boolean
-        default: false
+  workflow_dispatch: {}
   schedule:
     # 08:00 UTC daily. (GitHub cron is always UTC — adjust the hour if you want
     # 08:00 in a specific local timezone.)
     - cron: '0 8 * * *'
+  push:
+    branches: [ master ]
+    # On top of the daily build, a push cuts a nightly when ANY commit in the
+    # push carries the marker `[rebuild]` in its message — enforced by the
+    # `prepare` job's `if:`. This lets ordinary website edits push without
+    # kicking off the expensive 4-platform toolchain build, while still giving
+    # an on-demand force, e.g.:
+    #   git commit --allow-empty -m 'pick up nimony changes [rebuild]'
+    # or just run this workflow manually from the Actions tab.
 
 # Publishing to this repo's own Releases only needs contents:write, so the
 # built-in GITHUB_TOKEN suffices — no cross-repo PAT required.
@@ -33,6 +37,11 @@ jobs:
   # ── Resolve the version/commit and create the per-commit release ────────────
   prepare:
     runs-on: ubuntu-24.04
+    # Scheduled and manual runs always proceed; a push builds only when one of
+    # its commits opts in with the `[rebuild]` marker.
+    if: >-
+      github.event_name != 'push' ||
+      contains(join(github.event.commits.*.message), '[rebuild]')
     outputs:
       commit: ${{ steps.decide.outputs.commit }}
       short: ${{ steps.decide.outputs.short }}
@@ -75,8 +84,10 @@ jobs:
           echo "tag=$tag"          >> "$GITHUB_OUTPUT"
 
           # Skip a scheduled run only when this exact commit is already fully
-          # published (all 4 platform assets present). A partial/failed prior
-          # run has fewer assets and will retry.
+          # published (all 4 platform assets present); a partial/failed prior
+          # run has fewer assets and will retry. Manual and `[rebuild]` pushes
+          # always build (uploads use --clobber, so re-publishing just refreshes
+          # the assets).
           assets=0
           if count=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets | length' 2>/dev/null); then
             assets=$count
@@ -85,9 +96,6 @@ jobs:
           if [ "${{ github.event_name }}" = "schedule" ] && [ "$assets" -ge 4 ]; then
             echo "$tag already has $assets assets; nothing new to build."
             deploy=false
-          fi
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force }}" = "true" ]; then
-            deploy=true
           fi
           echo "deploy=$deploy" >> "$GITHUB_OUTPUT"
 

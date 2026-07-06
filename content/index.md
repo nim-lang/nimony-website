@@ -22,7 +22,7 @@ For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
 Prebuilt toolchains are published every day. Each build is its own versioned release — archives are named `nimony-<version>-<commit>-<platform>` (e.g. `nimony-0.4.0-a1b2c3d4e-linux_amd64.tar.xz`) so a download always pins the exact compiler revision.
 
-**[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases)** and grab the newest archive for your platform: Linux x86_64, Linux ARM64, macOS ARM64, or Windows x86_64.
+[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases) and grab the newest archive for your platform: Linux x86_64, Linux ARM64, macOS ARM64, or Windows x86_64.
 
 Extract the archive, add its `bin/` directory to your `PATH`, and make sure a C compiler (`gcc` or `clang`) is available. On Windows, run `hastur install` from the extracted directory to fetch the bundled MinGW+LLVM toolchain. Or [build from source](install.html).
 
