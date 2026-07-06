@@ -162,7 +162,7 @@ jobs:
       - name: Restore MinGW-W64 (Windows) from cache
         if: runner.os == 'Windows'
         id: windows-mingw-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: external/mingw-${{ matrix.cpu }}
           key: 'mingw-${{ matrix.cpu }}-gcc14-llvm19'
@@ -170,7 +170,7 @@ jobs:
       - name: Restore Nim DLLs (Windows) from cache
         if: runner.os == 'Windows'
         id: windows-dlls-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: external/dlls-${{ matrix.cpu }}
           key: 'dlls-${{ matrix.cpu }}'
@@ -225,7 +225,7 @@ jobs:
           cp -a nim-src/compiler/. nim/compiler/
 
       - name: Cache host-Nim build artifacts
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: |
             nimony/bin
