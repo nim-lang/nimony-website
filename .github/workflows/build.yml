@@ -64,7 +64,7 @@ jobs:
       - name: Upload static files as artifact
         id: deployment
         if: steps.check-changes.outputs.has_changes == 'true'
-        uses: actions/upload-pages-artifact@v4 # or specific "vX.X.X" version tag for this action
+        uses: actions/upload-pages-artifact@v5 # or specific "vX.X.X" version tag for this action
         with:
           path: site/
 
