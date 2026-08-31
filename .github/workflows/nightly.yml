@@ -254,7 +254,7 @@ jobs:
         shell: bash
         run: |
           cd nimony
-          nim c -r src/hastur --release build all
+          nim c -r src/hastur/hastur --release build all
 
       # ── package ─────────────────────────────────────────────────────────────
       - name: Stage redistributable package
