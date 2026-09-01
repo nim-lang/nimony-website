@@ -158,6 +158,23 @@ jobs:
           ref: ${{ needs.prepare.outputs.commit }}
           submodules: recursive   # vendor/mimalloc
 
+      - name: Checkout nim-lang/nativenif
+        # `arkham` (Leng -> asm-NIF codegen) and `nifasm` (asm-NIF -> executable)
+        # live here, not in nimony. hastur reaches them at `../nativenif` relative
+        # to the nimony working tree, so the path must be a SIBLING of `nimony/`.
+        # Without this checkout `hastur build all` prints
+        #   [build] ../nativenif not found — skipping arkham + nifasm
+        # and still succeeds, which is how the nightlies shipped without them.
+        #
+        # `fetch-depth: 0` because hastur's `syncNativenif` detaches the tree onto
+        # the pin in nimony's `src/nativenif.commit`, which is usually BEHIND the
+        # default branch and unreachable from a depth-1 clone.
+        uses: actions/checkout@v5
+        with:
+          repository: nim-lang/nativenif
+          path: nativenif
+          fetch-depth: 0
+
       # ── platform build dependencies ─────────────────────────────────────────
       - name: Install Linux dependencies (gcc-14)
         if: runner.os == 'Linux'
@@ -296,6 +313,16 @@ jobs:
           ext=""
           if [ "${{ runner.os }}" = "Windows" ]; then ext=".exe"; fi
           "staging/nimony/bin/nimony$ext" c -r hello.nim
+
+          # `hastur build all` SKIPS arkham + nifasm (with a message, exit 0) when
+          # the sibling nativenif checkout is missing, so a green build is not by
+          # itself proof they were packaged. Assert them by name.
+          for tool in arkham nifasm; do
+            if [ ! -x "staging/nimony/bin/$tool$ext" ]; then
+              echo "staging/nimony/bin/$tool$ext missing — the native backend was skipped" >&2
+              exit 1
+            fi
+          done
 
       - name: Create archive
         shell: bash
