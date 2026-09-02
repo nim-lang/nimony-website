@@ -30,9 +30,22 @@ jobs:
         with:
           fetch-depth: 1
 
-      - uses: jiro4989/setup-nim-action@v2
+      # nifler compiles Nim's own compiler/parser.nim (resolved via `--path:$nim`,
+      # see nimony/src/nifler/nim.cfg), so the stdlib docs can only be parsed by a
+      # Nim whose parser already knows the syntax nimony's lib/ uses (e.g.
+      # `concept of A`, Nim devel d9e28aac8). Stable Nim is always too old for
+      # that, which is why this build installs `devel` — same as nightly.yml.
+      - uses: alaviss/setup-nim@0.1.1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          path: 'nim'
+          version: devel
+
+      - name: Overlay current Nim compiler source (devel parser fixes)
+        run: |
+          # setup-nim installs a prebuilt nightly which can lag `devel` by weeks,
+          # so overlay fresh compiler sources on top of the nightly's bootstrap.
+          git clone --depth 1 --branch devel https://github.com/nim-lang/Nim nim-src
+          cp -a nim-src/compiler/. nim/compiler/
 
       - name: Checkout nim-lang/nimony (docs)
         uses: actions/checkout@v6
