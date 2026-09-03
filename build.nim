@@ -181,6 +181,15 @@ proc main() =
   buildArticles()
   copyFile "style.css", "site/style.css"
   copyFile "script.js", "site/script.js"
+  # The header band in style.css references this by a URL relative to the
+  # stylesheet, so one copy at the site root serves every page, including the
+  # ones a directory down under site/stdlib. Guarded: the styling degrades to
+  # its gradient scrim when the image is absent, so a checkout without the
+  # asset still builds.
+  if fileExists("assets/background.jpg"):
+    copyFile "assets/background.jpg", "site/background.jpg"
+  else:
+    echo "[build] assets/background.jpg not found - header uses the gradient fallback"
   let nimonyExe = ensureNimonyDocTools(nimonyDir)
   exec nimonyExe & " -f --outdir:site/stdlib doc " & nimonyDir & "/tests/nimony/stdlib/tall.nim"
   postProcessDagonDocs()

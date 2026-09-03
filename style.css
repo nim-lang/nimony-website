@@ -1,31 +1,52 @@
+/* ---------------------------------------------------------------------------
+   Palette: "Sunset" — sampled from assets/background.jpg.
+
+     amber glow   #f78d46 / #f0985a     terracotta  #dc7760 / #ca6a5d
+     rose sky     #c5827b / #af686f     mauve       #97788b / #aa7882
+     plum shadow  #542e34 / #271619     night       #191011 / #0e0506
+
+   The shipped background.jpg is rows 213-460 of the original frame: exactly
+   the window `cover` was already showing in the header, and nothing more.
+   The near houses below row 460 -- the ones with legible windows, balconies
+   and panels -- are not in the file. Its 5.17:1 aspect is the band's own
+   aspect at desktop width, so the crop fills the band with no further
+   cropping and the header renders as the full frame did. Sampling for the
+   two lower swatch rows was done on that frame before the crop.
+
+   Light = the paper-warm top of that gradient, dark = its plum-black bottom.
+   Hues stay inside the photograph's 320°-30° arc; syntax tokens are separated
+   by lightness and by small hue steps so the code still reads as code.
+   Every foreground below clears WCAG AA on its own background.
+   --------------------------------------------------------------------------- */
+
 :root {
 color-scheme: light;
---primary-background: #fff;
---secondary-background: ghostwhite;
---third-background: #e8e8e8;
---info-background: #50c050;
---warning-background: #c0a000;
---error-background: #e04040;
---border: #dde;
---text: #222;
---anchor: #0f3d6b;
---anchor-focus: #082642;
---input-focus: #0f4a7a;
---strong: #3c3c3c;
---hint: #9A9A9A;
+--primary-background: #fffbf7;
+--secondary-background: #f9f3ee;
+--third-background: #f0e5dd;
+--info-background: #3f8f6a;
+--warning-background: #a8760f;
+--error-background: #c04a34;
+--border: #ead9d0;
+--text: #2a1c22;
+--anchor: #9b3a5b;
+--anchor-focus: #6f2740;
+--input-focus: #b04d20;
+--strong: #3d2a31;
+--hint: #9c8790;
 
---keyword: #5e8f60;
---identifier: #222;
---comment: #484a86;
---operator: #155da4;
---punctuation: black;
---other: black;
---escapeSequence: #c4891b;
---number: #252dbe;
---literal: #a4255b;
---program: #6060c0;
---option: #508000;
---raw-data: #a4255b;
+--keyword: #a32d63;
+--identifier: #2a1c22;
+--comment: #7d626b;
+--operator: #a04e28;
+--punctuation: #5f4750;
+--other: #2a1c22;
+--escapeSequence: #9c5c15;
+--number: #8f5510;
+--literal: #a63a2f;
+--program: #7c3f63;
+--option: #8f5510;
+--raw-data: #a63a2f;
 
 --clipboard-image-normal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: black' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E %3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' /%3E %3C/svg%3E");
 --clipboard-image-selected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: black' viewBox='0 0 20 20' fill='currentColor'%3E %3Cpath d='M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z' /%3E %3Cpath d='M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z' /%3E %3C/svg%3E");
@@ -34,32 +55,32 @@ color-scheme: light;
 
 [data-theme="dark"] {
 color-scheme: dark;
---primary-background: #171921;
---secondary-background: #1e202a;
---third-background: #2b2e3b;
---info-background: #008000;
---warning-background: #807000;
---error-background: #c03000;
---border: #0e1014;
---text: #fff;
---anchor: #7eb8ff;
---anchor-focus: #a8d4ff;
---input-focus: #7eb8ff;
---strong: #c9b8f0;
---hint: #7A7C85;
+--primary-background: #150e12;
+--secondary-background: #1e151a;
+--third-background: #2c1f26;
+--info-background: #2f6f4f;
+--warning-background: #7d5a0e;
+--error-background: #9e3a28;
+--border: #38262e;
+--text: #f4e8e4;
+--anchor: #e9a6c4;
+--anchor-focus: #f5c8dc;
+--input-focus: #f0985a;
+--strong: #ffb070;
+--hint: #8d7580;
 
---keyword: #e8eaed;
---identifier: #e8eaed;
---comment: #8899a8;
---operator: #e8eaed;
---punctuation: #e8eaed;
---other: #e8eaed;
---escapeSequence: #c9b8f0;
---number: #e6df9a;
---literal: #f0b8c8;
---program: #9090c0;
---option: #90b010;
---raw-data: #7eb8ff;
+--keyword: #ffb070;
+--identifier: #f0e2de;
+--comment: #a3878f;
+--operator: #eab9a4;
+--punctuation: #d3bcc2;
+--other: #f0e2de;
+--escapeSequence: #e9a6c4;
+--number: #f2d091;
+--literal: #f4a3a3;
+--program: #d6a2c0;
+--option: #f2d091;
+--raw-data: #f4a3a3;
 
 --clipboard-image-normal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: lightgray' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E %3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' /%3E %3C/svg%3E");
 --clipboard-image-selected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: lightgray' viewBox='0 0 20 20' fill='currentColor'%3E %3Cpath d='M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z' /%3E %3Cpath d='M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z' /%3E %3C/svg%3E");
@@ -67,34 +88,34 @@ color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
-[data-theme="auto"] {
+[data-theme="auto"], :root:not([data-theme]) {
     color-scheme: dark;
-    --primary-background: #171921;
-    --secondary-background: #1e202a;
-    --third-background: #2b2e3b;
-    --info-background: #008000;
-    --warning-background: #807000;
-    --error-background: #c03000;
-    --border: #0e1014;
-    --text: #fff;
-    --anchor: #7eb8ff;
-    --anchor-focus: #a8d4ff;
-    --input-focus: #7eb8ff;
-    --strong: #c9b8f0;
-    --hint: #7A7C85;
+    --primary-background: #150e12;
+    --secondary-background: #1e151a;
+    --third-background: #2c1f26;
+    --info-background: #2f6f4f;
+    --warning-background: #7d5a0e;
+    --error-background: #9e3a28;
+    --border: #38262e;
+    --text: #f4e8e4;
+    --anchor: #e9a6c4;
+    --anchor-focus: #f5c8dc;
+    --input-focus: #f0985a;
+    --strong: #ffb070;
+    --hint: #8d7580;
 
-    --keyword: #e8eaed;
-    --identifier: #e8eaed;
-    --comment: #8899a8;
-    --operator: #e8eaed;
-    --punctuation: #e8eaed;
-    --other: #e8eaed;
-    --escapeSequence: #c9b8f0;
-    --number: #e6df9a;
-    --literal: #f0b8c8;
-    --program: #9090c0;
-    --option: #90b010;
-    --raw-data: #7eb8ff;
+    --keyword: #ffb070;
+    --identifier: #f0e2de;
+    --comment: #a3878f;
+    --operator: #eab9a4;
+    --punctuation: #d3bcc2;
+    --other: #f0e2de;
+    --escapeSequence: #e9a6c4;
+    --number: #f2d091;
+    --literal: #f4a3a3;
+    --program: #d6a2c0;
+    --option: #f2d091;
+    --raw-data: #f4a3a3;
 
     --clipboard-image-normal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: lightgray' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E %3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' /%3E %3C/svg%3E");
     --clipboard-image-selected: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' style='color: lightgray' viewBox='0 0 20 20' fill='currentColor'%3E %3Cpath d='M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z' /%3E %3Cpath d='M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z' /%3E %3C/svg%3E");
@@ -182,48 +203,92 @@ span.Command, span.Rule, span.Hyperlink,
 span.Label, span.Reference, span.Other {
 color: var(--other); }
 
-/* Light theme (default): warm paper + deep navy accent */
+/* Light theme (default): sunlit paper, terracotta accent, plum ink.
+   `--accent-2` is the mauve/rose counter-hue; it carries links and the
+   secondary headings so the accent orange is not asked to do every job. */
 :root {
-    --bg-primary: #f6f5f2;
-    --bg-secondary: #ffffff;
-    --third-background: #ebe9e4;
-    --text-primary: #1c2128;
-    --text-secondary: #0f3d6b;
-    --text-muted: #5c6570;
-    --border-color: #dce1e8;
-    --code-bg: #f1f3f5;
-    --code-border: #cfd6df;
-    --accent-color: #c45c26;
-    --link-hover: #082642;
-    --string-color: #2d6a4f;
-    --keyword-color: #9c4221;
-    --comment-color: #6b7280;
-    --shadow-sm: 0 1px 2px rgba(15, 61, 107, 0.06);
-    --shadow-md: 0 6px 24px rgba(15, 61, 107, 0.08);
-    --radius: 10px;
-    --radius-sm: 6px;
+    --bg-primary: #f9f3ee;
+    --bg-secondary: #fffbf7;
+    --third-background: #f0e5dd;
+    --text-primary: #2a1c22;
+    --text-secondary: #9b3a5b;
+    --text-muted: #7c6068;
+    --border-color: #ead9d0;
+    --code-bg: #f6ece5;
+    --code-border: #e3d1c6;
+    --accent-color: #b04d20;
+    --accent-2: #9b3a5b;
+    --accent-soft: #f0985a;
+    --link-hover: #6f2740;
+    --string-color: #a63a2f;
+    --keyword-color: #a32d63;
+    --comment-color: #7d626b;
+    --rule: linear-gradient(90deg, #b04d20, #c86a3a 38%, #9b3a5b 72%, #7c3f63);
+    --shadow-sm: 0 1px 2px rgba(84, 46, 52, 0.07);
+    --shadow-md: 0 8px 28px rgba(84, 46, 52, 0.09);
+    --shadow-lg: 0 18px 48px rgba(84, 46, 52, 0.13);
+    --scrim: 0.76;
+    --radius: 12px;
+    --radius-sm: 7px;
 }
 
-/* Dark theme: softened slate (less neon / heavy blue) */
+/* Dark theme: the bottom of the photograph — plum-black silhouettes with the
+   amber horizon kept as the accent. */
 [data-theme="dark"] {
-    --bg-primary: #12151a;
-    --bg-secondary: #1a1f27;
-    --third-background: #252b36;
-    --text-primary: #e8eaed;
-    --text-secondary: #7eb8ff;
-    --text-muted: #9aa3af;
-    --border-color: #2f3642;
-    --code-bg: #161a21;
-    --code-border: #343c4a;
-    --accent-color: #f0b429;
-    --link-hover: #a8d4ff;
-    --string-color: #8fd9a8;
-    --keyword-color: #f6ad8f;
-    --comment-color: #8899a8;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-    --shadow-md: 0 10px 40px rgba(0, 0, 0, 0.45);
-    --radius: 10px;
-    --radius-sm: 6px;
+    --bg-primary: #150e12;
+    --bg-secondary: #1e151a;
+    --third-background: #2c1f26;
+    --text-primary: #f4e8e4;
+    --text-secondary: #e9a6c4;
+    --text-muted: #b7a0a8;
+    --border-color: #38262e;
+    --code-bg: #1a1216;
+    --code-border: #3d2a33;
+    --accent-color: #f0985a;
+    --accent-2: #e9a6c4;
+    --accent-soft: #f78d46;
+    --link-hover: #f5c8dc;
+    --string-color: #f4a3a3;
+    --keyword-color: #ffb070;
+    --comment-color: #a3878f;
+    --rule: linear-gradient(90deg, #f78d46, #f0985a 38%, #e9a6c4 72%, #b98aa8);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 10px 34px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 22px 56px rgba(0, 0, 0, 0.62);
+    --scrim: 0.76;
+    --radius: 12px;
+    --radius-sm: 7px;
+}
+
+/* Same palette when the OS asks for dark and no explicit choice was stored.
+   script.js pins an explicit data-theme on load; this keeps the very first
+   paint (and the no-JS case) from flashing light. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --bg-primary: #150e12;
+        --bg-secondary: #1e151a;
+        --third-background: #2c1f26;
+        --text-primary: #f4e8e4;
+        --text-secondary: #e9a6c4;
+        --text-muted: #b7a0a8;
+        --border-color: #38262e;
+        --code-bg: #1a1216;
+        --code-border: #3d2a33;
+        --accent-color: #f0985a;
+        --accent-2: #e9a6c4;
+        --accent-soft: #f78d46;
+        --link-hover: #f5c8dc;
+        --string-color: #f4a3a3;
+        --keyword-color: #ffb070;
+        --comment-color: #a3878f;
+        --rule: linear-gradient(90deg, #f78d46, #f0985a 38%, #e9a6c4 72%, #b98aa8);
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+        --shadow-md: 0 10px 34px rgba(0, 0, 0, 0.55);
+        --shadow-lg: 0 22px 56px rgba(0, 0, 0, 0.62);
+        --scrim: 0.76;
+        --radius: 12px;
+        --radius-sm: 7px;
+    }
 }
 
 * {
@@ -240,17 +305,19 @@ dd {
 body {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg-primary);
+    /* The sky, abstracted: the same warm wash the photograph opens with,
+       anchored at the top of the page so it sits behind the header band. */
     background-image:
-        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(15, 61, 107, 0.06), transparent 55%);
+        radial-gradient(ellipse 90% 46% at 18% -8%,
+            color-mix(in srgb, var(--accent-soft) 20%, transparent), transparent 62%),
+        radial-gradient(ellipse 110% 52% at 82% -12%,
+            color-mix(in srgb, var(--accent-2) 15%, transparent), transparent 66%);
+    background-repeat: no-repeat;
     color: var(--text-primary);
     line-height: 1.65;
     font-size: 17px;
+    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-}
-
-[data-theme="dark"] body {
-    background-image:
-        radial-gradient(ellipse 100% 70% at 50% -15%, rgba(126, 184, 255, 0.07), transparent 50%);
 }
 
 .container {
@@ -259,15 +326,75 @@ body {
     padding: 28px 22px 48px;
 }
 
-/* Header */
-header {
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--accent-color);
+/* ---------------------------------------------------------------------------
+   Header — the photograph itself, as a slim band.
+
+   `background.jpg` is the bottom layer; a scrim built from the theme's own
+   colours sits on top of it, so the band lands in the palette instead of
+   fighting it. If the image is missing the scrim alone still reads as a
+   sunset gradient, which is why the fallbacks are opaque colours and not
+   transparency. Excluded: `header.nav-controls`, the compact bar the paged
+   manual uses (multipage.nim) — a photo does not belong on a toolbar.
+   --------------------------------------------------------------------------- */
+header:not(.nav-controls) {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    padding: 20px 22px;
+    padding: clamp(2rem, 5vw, 3.25rem) clamp(1.25rem, 4vw, 2.5rem);
     margin-bottom: 28px;
     text-align: center;
-    box-shadow: var(--shadow-md);
+    background-color: var(--bg-secondary);
+    background-image: url("background.jpg");
+    background-size: cover;
+    background-position: 50% 50%;
+    box-shadow: var(--shadow-lg);
+}
+
+/* The scrim, and the one place in this file where the numbers are not taste.
+   Text sits on a photograph, so the floor is whatever the worst pixel does.
+   0.76 over this crop measures 5.9:1 or better behind the actual glyphs, on
+   both the index and the longer manual title, at 1280px and 390px, in both
+   themes. Earlier passes at 0.5 fell to 3.98:1 over the silhouettes. If you
+   swap the image or restyle the band, re-measure -- do not eyeball it. */
+header:not(.nav-controls)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(
+            168deg,
+            color-mix(in srgb, var(--bg-secondary) 92%, var(--accent-2)) 0%,
+            color-mix(in srgb, var(--bg-secondary) 92%, var(--accent-soft)) 55%,
+            var(--bg-secondary) 100%
+        );
+    opacity: var(--scrim);
+}
+
+/* Hairline of horizon along the bottom edge. */
+header:not(.nav-controls)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--rule);
+    opacity: 0.9;
+}
+
+header:not(.nav-controls) h1 {
+    color: var(--text-primary);
+    font-size: clamp(2.1rem, 6vw, 3.15rem);
+    letter-spacing: -0.035em;
+    margin-bottom: 0.35rem;
+    text-shadow: 0 1px 0 color-mix(in srgb, var(--bg-secondary) 70%, transparent);
+}
+
+[data-theme="dark"] header:not(.nav-controls) h1 {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65);
 }
 
 h1 {
@@ -284,115 +411,141 @@ h1 {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
+/* Small-caps tagline reads as a mark rather than a sentence. */
 .subtitle {
     color: var(--text-muted);
-    font-size: 1.2em;
-    font-style: italic;
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+/* Inside the band the tagline sits on the photograph, so it cannot use the
+   muted grey it uses elsewhere: composited against the brightest part of the
+   sky that lands at 2.7:1. These two hold >=5:1 over every pixel in the
+   image, which is what small text needs. */
+header:not(.nav-controls) .subtitle {
+    color: #4a343c;
+}
+
+[data-theme="dark"] header:not(.nav-controls) .subtitle {
+    color: #f0e0e4;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
 }
 
 /* Navigation */
 nav {
     background-color: var(--bg-secondary);
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    padding: 18px 20px;
+    padding: 14px 16px;
     margin-bottom: 28px;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* multipage.nim's toolbar is itself a <header class="nav-controls">, so it is
+   excluded from the band above; it still needs the separation from content. */
+header.nav-controls {
+    margin-bottom: 24px;
 }
 
 /* Navigation controls - always visible */
 .nav-controls {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 
 
-/* Inline nav links — lighter gold chip than full .nav-btn nuggets */
+/* ---------------------------------------------------------------------------
+   Buttons and chips.
+
+   These were metallic "gold nuggets": four stacked inset shadows plus a
+   glint animation that ran forever on every control. The warm-gradient idea
+   is kept — it is the palette's own amber — but the glare is dialled back to
+   a single highlight, and the glint now only runs on hover, where movement
+   means something. `--chip-*` keeps the three variants in step.
+   --------------------------------------------------------------------------- */
+:root {
+    /* The dark end stops short of the full --accent-color: at 100% terracotta
+       the dark chip ink drops to ~3:1 against the bottom of the button in the
+       light theme. Ending at a 68/32 blend keeps every band of the gradient
+       above 5.5:1 in both themes. */
+    --chip-face: linear-gradient(
+        160deg,
+        color-mix(in srgb, var(--accent-soft) 82%, white) 0%,
+        var(--accent-soft) 46%,
+        color-mix(in srgb, var(--accent-soft) 68%, var(--accent-color)) 100%
+    );
+    --chip-ink: #2a1c22;
+    --chip-edge: color-mix(in srgb, var(--accent-color) 62%, black);
+    --chip-rest:
+        inset 0 1px 0 color-mix(in srgb, white 55%, transparent),
+        0 1px 2px rgba(84, 46, 52, 0.14),
+        0 3px 10px color-mix(in srgb, var(--accent-color) 16%, transparent);
+    --chip-hover:
+        inset 0 1px 0 color-mix(in srgb, white 68%, transparent),
+        0 2px 4px rgba(84, 46, 52, 0.16),
+        0 8px 22px color-mix(in srgb, var(--accent-color) 30%, transparent);
+    --chip-active:
+        inset 0 2px 6px rgba(84, 46, 52, 0.3),
+        0 1px 2px rgba(84, 46, 52, 0.12);
+}
+
+/* Inline nav links — a lighter chip than the full .nav-btn */
 .nav-link {
     position: relative;
     overflow: hidden;
     isolation: isolate;
     display: inline-block;
-    color: var(--bg-secondary);
+    color: var(--chip-ink);
     text-decoration: none;
-    padding: 8px 14px;
+    padding: 7px 14px;
     border-radius: var(--radius-sm);
     font-weight: 600;
-    font-size: 0.92rem;
-    border: 1px solid color-mix(in srgb, var(--accent-color) 54%, black);
-    background: linear-gradient(
-        162deg,
-        color-mix(in srgb, var(--accent-color) 52%, white) 0%,
-        var(--accent-color) 48%,
-        color-mix(in srgb, var(--accent-color) 74%, black) 100%
-    );
-    box-shadow:
-        inset 0 1px 3px color-mix(in srgb, white 34%, transparent),
-        inset 0 -2px 6px color-mix(in srgb, black 11%, transparent),
-        0 2px 7px color-mix(in srgb, var(--accent-color) 18%, transparent),
-        0 1px 3px rgba(0, 0, 0, 0.09);
-    text-shadow: 0 1px 1px color-mix(in srgb, black 18%, transparent);
-    transition: transform 0.2s ease, filter 0.22s ease, box-shadow 0.22s ease;
-}
-
-[data-theme="dark"] .nav-link {
-    text-shadow: 0 1px 2px color-mix(in srgb, black 34%, transparent);
+    font-size: 0.9rem;
+    border: 1px solid var(--chip-edge);
+    background: var(--chip-face);
+    box-shadow: var(--chip-rest);
+    transition: transform 0.18s ease, filter 0.2s ease, box-shadow 0.2s ease;
 }
 
 .nav-link::before {
     content: "";
     position: absolute;
-    left: 10%;
-    right: 32%;
-    top: 0;
-    height: 46%;
-    border-radius: 999px / 50%;
-    background: radial-gradient(
-        ellipse 100% 100% at 44% 0%,
-        color-mix(in srgb, white 68%, var(--accent-color)) 0%,
-        transparent 74%
+    inset: 0 0 auto 0;
+    height: 50%;
+    background: linear-gradient(
+        color-mix(in srgb, white 40%, transparent),
+        transparent
     );
-    opacity: 0.36;
     pointer-events: none;
-    transition: opacity 0.22s ease;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .nav-link::before {
-        animation: gold-nugget-glint 7.5s ease-in-out infinite;
-        animation-delay: 0.75s;
-    }
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
 }
 
 .nav-link:hover {
-    color: var(--bg-secondary);
-    filter: brightness(1.05) saturate(1.05);
-    transform: translateY(-2px);
-    box-shadow:
-        inset 0 2px 4px color-mix(in srgb, white 38%, transparent),
-        inset 0 -3px 8px color-mix(in srgb, black 13%, transparent),
-        0 5px 16px color-mix(in srgb, var(--accent-color) 28%, transparent),
-        0 3px 8px rgba(0, 0, 0, 0.11);
+    color: var(--chip-ink);
+    filter: brightness(1.04) saturate(1.04);
+    transform: translateY(-1px);
+    box-shadow: var(--chip-hover);
 }
 
 .nav-link:hover::before {
-    opacity: 0.56;
+    opacity: 1;
 }
 
 .nav-link:active {
-    transform: translateY(0) scale(0.98);
-    filter: brightness(0.96);
-    box-shadow:
-        inset 0 3px 10px color-mix(in srgb, black 16%, transparent),
-        inset 0 1px 2px color-mix(in srgb, white 26%, transparent),
-        0 2px 5px rgba(0, 0, 0, 0.08);
+    transform: translateY(0) scale(0.985);
+    filter: brightness(0.97);
+    box-shadow: var(--chip-active);
 }
 
 .nav-link:visited {
-    color: var(--bg-secondary);
+    color: var(--chip-ink);
 }
 
 /* Hierarchical Navigation */
@@ -463,168 +616,247 @@ nav {
     text-decoration: underline;
 }
 
-/* Minimap button — metallic “gold nugget” */
+/* Primary nav button */
 .nav-btn {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    background: linear-gradient(
-        155deg,
-        color-mix(in srgb, var(--accent-color) 58%, white) 0%,
-        var(--accent-color) 42%,
-        color-mix(in srgb, var(--accent-color) 72%, black) 78%,
-        color-mix(in srgb, var(--accent-color) 52%, black) 100%
-    );
-    color: var(--bg-secondary);
-    border: 1px solid color-mix(in srgb, var(--accent-color) 52%, black);
-    padding: 10px 18px;
+    background: var(--chip-face);
+    color: var(--chip-ink);
+    border: 1px solid var(--chip-edge);
+    padding: 9px 17px;
+    font: inherit;
     font-weight: 600;
+    font-size: 0.92rem;
+    line-height: 1.2;
     cursor: pointer;
     border-radius: var(--radius-sm);
-    transition: transform 0.15s ease, filter 0.25s ease, box-shadow 0.25s ease;
-    font-size: 0.95rem;
-    box-shadow:
-        inset 0 2px 4px color-mix(in srgb, white 42%, transparent),
-        inset 0 -4px 10px color-mix(in srgb, black 16%, transparent),
-        0 1px 0 color-mix(in srgb, var(--accent-color) 65%, white),
-        0 5px 14px color-mix(in srgb, var(--accent-color) 28%, transparent),
-        0 3px 8px rgba(0, 0, 0, 0.14);
-    text-shadow: 0 1px 2px color-mix(in srgb, black 22%, transparent);
-}
-
-[data-theme="dark"] .nav-btn {
-    text-shadow: 0 1px 2px color-mix(in srgb, black 40%, transparent);
+    transition: transform 0.18s ease, filter 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--chip-rest);
 }
 
 .nav-btn::before {
     content: "";
     position: absolute;
-    left: 6%;
-    right: 22%;
-    top: 0;
+    inset: 0 0 auto 0;
     height: 52%;
-    border-radius: 999px / 55%;
-    background: radial-gradient(
-        ellipse 100% 100% at 45% 0%,
-        color-mix(in srgb, white 78%, var(--accent-color)) 0%,
-        transparent 70%
+    background: linear-gradient(
+        color-mix(in srgb, white 46%, transparent),
+        transparent
     );
-    opacity: 0.52;
     pointer-events: none;
-    transition: opacity 0.25s ease;
+    opacity: 0.72;
+    transition: opacity 0.2s ease;
+}
+
+/* The sheen sweep — hover only, so nothing moves while you are reading. */
+.nav-btn::after,
+.theme-switcher::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 45%;
+    left: -60%;
+    background: linear-gradient(
+        100deg,
+        transparent,
+        color-mix(in srgb, white 62%, transparent),
+        transparent
+    );
+    pointer-events: none;
+    opacity: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    .nav-btn::before {
-        animation: gold-nugget-glint 6s ease-in-out infinite;
+    .nav-btn:hover::after,
+    .theme-switcher:hover::after {
+        animation: gold-nugget-glint 0.75s ease-out;
     }
 }
 
 .nav-btn:hover {
-    filter: brightness(1.06) saturate(1.08);
-    box-shadow:
-        inset 0 2px 5px color-mix(in srgb, white 48%, transparent),
-        inset 0 -4px 12px color-mix(in srgb, black 20%, transparent),
-        0 1px 0 color-mix(in srgb, var(--accent-color) 72%, white),
-        0 7px 22px color-mix(in srgb, var(--accent-color) 42%, transparent),
-        0 4px 12px rgba(0, 0, 0, 0.16);
+    filter: brightness(1.05) saturate(1.05);
+    transform: translateY(-1px);
+    box-shadow: var(--chip-hover);
 }
 
 .nav-btn:hover::before {
-    opacity: 0.78;
+    opacity: 1;
+}
+
+.nav-btn:focus-visible,
+.nav-link:focus-visible,
+.theme-switcher:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 2px;
 }
 
 .nav-btn:active {
-    transform: translateY(1px) scale(0.99);
-    filter: brightness(0.96) saturate(1.02);
-    box-shadow:
-        inset 0 4px 14px color-mix(in srgb, black 24%, transparent),
-        inset 0 1px 2px color-mix(in srgb, white 28%, transparent),
-        0 2px 6px rgba(0, 0, 0, 0.12);
+    transform: translateY(0) scale(0.985);
+    filter: brightness(0.97);
+    box-shadow: var(--chip-active);
 }
 
+/* Toggled-open state: reads as pressed-in, not as another raised chip. */
 .nav-btn.expanded {
-    background: linear-gradient(
-        185deg,
-        var(--bg-secondary) 0%,
-        color-mix(in srgb, var(--bg-secondary) 88%, var(--accent-color)) 100%
-    );
+    background: var(--third-background);
     color: var(--accent-color);
-    border: 2px solid color-mix(in srgb, var(--accent-color) 82%, black);
+    border-color: color-mix(in srgb, var(--accent-color) 45%, var(--border-color));
     filter: none;
-    box-shadow:
-        inset 0 2px 5px color-mix(in srgb, var(--accent-color) 12%, transparent),
-        0 0 0 1px color-mix(in srgb, var(--accent-color) 38%, white),
-        0 4px 16px color-mix(in srgb, var(--accent-color) 24%, transparent);
-    text-shadow: none;
+    box-shadow: inset 0 2px 5px rgba(84, 46, 52, 0.16);
 }
 
-.nav-btn.expanded::before {
+.nav-btn.expanded::before,
+.nav-btn.expanded::after {
     opacity: 0;
     animation: none;
 }
 
 .nav-btn.nav-btn-disabled {
     cursor: not-allowed;
-    opacity: 0.45;
+    opacity: 0.42;
     pointer-events: none;
-    filter: saturate(0.4);
+    filter: saturate(0.35);
     box-shadow: none;
 }
 
-.nav-btn.nav-btn-disabled::before {
+.nav-btn.nav-btn-disabled::before,
+.nav-btn.nav-btn-disabled::after {
     opacity: 0;
     animation: none;
 }
 
-/* Main content */
+/* Main content. The accent now arrives as a thin band along the top edge
+   rather than as a full outline plus a 4px left rail — one accent gesture per
+   surface, so header / nav / main / footer stop competing. */
 main {
+    position: relative;
     background-color: var(--bg-secondary);
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    padding: 36px 40px;
+    padding: clamp(24px, 4vw, 44px) clamp(20px, 4.5vw, 48px);
     margin-bottom: 28px;
     box-shadow: var(--shadow-md);
-    border-left: 4px solid var(--accent-color);
+    overflow-wrap: break-word;
+}
+
+main::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    background: var(--rule);
 }
 
 h2 {
     color: var(--accent-color);
-    font-size: 1.45rem;
+    font-size: clamp(1.35rem, 2.6vw, 1.6rem);
     font-weight: 650;
-    margin-bottom: 18px;
+    letter-spacing: -0.015em;
+    margin: 2.2em 0 0.7em;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--accent-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* No stranded top margin on the first heading of a page. */
+main > h1:first-child,
+main > h2:first-child,
+main > h3:first-child,
+.section > h1:first-child {
+    margin-top: 0;
 }
 
 h3 {
-    color: var(--text-secondary);
-    font-size: 1.15rem;
-    font-weight: 600;
-    margin: 28px 0 12px 0;
+    color: var(--accent-2);
+    font-size: 1.12rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    margin: 1.9em 0 0.5em;
 }
 
+h4, h5, h6 {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 650;
+    margin: 1.6em 0 0.4em;
+}
+
+/* Justified text without hyphenation opens rivers of white space between
+   words; ragged-right with a capped measure reads better at every width.
+   The limit keeps hyphenation for genuinely long words and stops it turning
+   "format" into "for-mat" and "delivers" into "de-livers". */
 p {
     margin-bottom: 15px;
-    text-align: justify;
+    max-width: 74ch;
+    hyphens: auto;
+    hyphenate-limit-chars: 10 4 4;
+}
+
+/* A max-width block is still left-aligned inside its container, so the
+   measure cap above pushes centred single-line paragraphs off centre --
+   it visibly displaced the header tagline and the footer colophon. */
+header p,
+footer p,
+.subtitle {
+    max-width: none;
+}
+
+main > p:last-child {
+    margin-bottom: 0;
+}
+
+blockquote {
+    margin: 22px 0;
+    padding: 2px 0 2px 20px;
+    border-left: 3px solid color-mix(in srgb, var(--accent-2) 55%, var(--border-color));
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+hr {
+    height: 1px;
+    border: 0;
+    margin: 2.4em 0;
+    background: linear-gradient(90deg,
+        transparent,
+        color-mix(in srgb, var(--accent-2) 45%, var(--border-color)) 20%,
+        color-mix(in srgb, var(--accent-color) 45%, var(--border-color)) 80%,
+        transparent);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
 }
 
 /* Code blocks */
 pre {
     background-color: var(--code-bg);
     border: 1px solid var(--code-border);
-    padding: 18px 20px;
+    border-left: 3px solid color-mix(in srgb, var(--accent-soft) 55%, var(--code-border));
+    padding: 16px 20px;
     margin: 22px 0;
     overflow-x: auto;
     border-radius: var(--radius-sm);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    tab-size: 2;
+    box-shadow: inset 0 1px 2px color-mix(in srgb, var(--text-primary) 5%, transparent);
+}
+
+code, pre, tt {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
 }
 
 code {
-    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
     background-color: var(--code-bg);
-    color: var(--text-secondary);
-    padding: 2px 7px;
+    color: var(--accent-2);
+    padding: 0.1em 0.4em;
     border-radius: 4px;
     font-size: 0.88em;
     border: 1px solid color-mix(in srgb, var(--code-border) 85%, transparent);
@@ -633,16 +865,17 @@ code {
 pre code {
     background: none;
     padding: 0;
+    border: 0;
+    font-size: inherit;
     color: var(--text-primary);
 }
 
 /* Inline code */
 .inline-code {
     background-color: var(--code-bg);
-    color: var(--text-secondary);
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+    color: var(--accent-2);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
     font-size: 0.9em;
 }
 
@@ -661,53 +894,101 @@ a:hover {
 }
 
 a:visited {
-    color: color-mix(in srgb, var(--text-secondary) 88%, #402060);
+    color: color-mix(in srgb, var(--text-secondary) 82%, #6a3a70);
+}
+
+a:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 /* Lists */
 ul, ol {
     margin: 15px 0;
-    padding-left: 30px;
+    padding-left: 26px;
+    max-width: 74ch;
 }
 
 li {
     margin-bottom: 8px;
 }
 
-/* Tables */
+li::marker {
+    color: color-mix(in srgb, var(--accent-color) 75%, var(--text-muted));
+}
+
+/* Tables. Wide tables scroll inside their own box instead of pushing the
+   page sideways. */
 table {
     width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 22px 0;
     background-color: var(--bg-secondary);
-    border: 1px solid var(--code-border);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
 }
 
 th, td {
-    padding: 12px;
+    padding: 10px 14px;
     text-align: left;
-    border: 1px solid var(--code-border);
+    border-bottom: 1px solid var(--border-color);
+}
+
+tr:last-child td {
+    border-bottom: 0;
+}
+
+tbody tr:nth-child(even) {
+    background-color: color-mix(in srgb, var(--third-background) 45%, transparent);
 }
 
 th {
-    background-color: var(--bg-secondary);
-    color: var(--text-secondary);
-    font-weight: bold;
+    background-color: var(--third-background);
+    color: var(--text-primary);
+    font-weight: 650;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid var(--code-border);
 }
 
 /* Footer */
 footer {
+    position: relative;
+    overflow: hidden;
     background-color: var(--bg-secondary);
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 22px;
     text-align: center;
     color: var(--text-muted);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     box-shadow: var(--shadow-sm);
+}
+
+footer::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    background: var(--rule);
+}
+
+/* The paged manual's footer is a Prev/Next bar, not a colophon. */
+footer.page-nav {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+}
+
+footer.page-nav::before {
+    display: none;
 }
 
 /* Responsive design */
@@ -729,8 +1010,21 @@ footer {
         font-size: 2em;
     }
 
-    main {
-        padding: 20px;
+    header:not(.nav-controls) {
+        padding: 1.75rem 1.1rem;
+    }
+
+    .nav-controls {
+        gap: 8px;
+    }
+
+    .nav-btn {
+        padding: 8px 13px;
+        font-size: 0.86rem;
+    }
+
+    p, ul, ol {
+        max-width: none;
     }
 }
 
@@ -773,79 +1067,11 @@ footer {
     overflow: hidden;
 }
 
-/* Theme switcher — sits in the nav-controls bar; inherits nav-btn sizing
-   (so it doesn't stretch). `margin-left: auto` pushes it to the right end
-   of the flex bar. The gold-nugget gradient stays as-is. */
+/* Theme switcher — same chip as .nav-btn (it *is* a .nav-btn); the only
+   extra job is `margin-left: auto`, which pushes it to the right end of the
+   flex bar. Everything else is inherited, so the two never drift apart. */
 .theme-switcher {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
     margin-left: auto;
-    background: linear-gradient(
-        158deg,
-        color-mix(in srgb, var(--accent-color) 56%, white) 0%,
-        var(--accent-color) 44%,
-        color-mix(in srgb, var(--accent-color) 74%, black) 100%
-    );
-    border: none;
-    border-bottom: 2px solid color-mix(in srgb, var(--accent-color) 58%, black);
-    color: var(--bg-secondary);
-    cursor: pointer;
-    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
-    font-weight: bold;
-    transition: transform 0.15s ease, filter 0.25s ease, box-shadow 0.25s ease;
-    text-align: center;
-    box-shadow:
-        inset 0 2px 4px color-mix(in srgb, white 38%, transparent),
-        inset 0 -3px 8px color-mix(in srgb, black 14%, transparent),
-        0 2px 10px color-mix(in srgb, var(--accent-color) 26%, transparent);
-    text-shadow: 0 1px 2px color-mix(in srgb, black 22%, transparent);
-}
-
-[data-theme="dark"] .theme-switcher {
-    text-shadow: 0 1px 2px color-mix(in srgb, black 40%, transparent);
-}
-
-.theme-switcher::before {
-    content: "";
-    position: absolute;
-    left: 10%;
-    right: 28%;
-    top: 0;
-    height: 50%;
-    border-radius: 999px / 52%;
-    background: radial-gradient(
-        ellipse 100% 100% at 42% 0%,
-        color-mix(in srgb, white 76%, var(--accent-color)) 0%,
-        transparent 68%
-    );
-    opacity: 0.5;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .theme-switcher::before {
-        animation: gold-nugget-glint 6.5s ease-in-out infinite;
-        animation-delay: 0.35s;
-    }
-}
-
-.theme-switcher:hover {
-    filter: brightness(1.06) saturate(1.08);
-    box-shadow:
-        inset 0 2px 5px color-mix(in srgb, white 46%, transparent),
-        inset 0 -4px 10px color-mix(in srgb, black 18%, transparent),
-        0 4px 18px color-mix(in srgb, var(--accent-color) 38%, transparent);
-}
-
-.theme-switcher:hover::before {
-    opacity: 0.76;
-}
-
-.theme-switcher:active {
-    transform: scale(0.992);
-    filter: brightness(0.95);
 }
 
 /* Hierarchical section list — used by the manual nav (and previously by
@@ -918,48 +1144,36 @@ footer {
     color: var(--bg-secondary);
 }
 
-/* Toggle button for sidebar — compact nugget */
+/* Toggle button for sidebar — same chip tokens as .nav-btn */
 .sidebar-toggle {
     position: fixed;
     top: 20px;
     right: 20px;
     z-index: 1001;
-    overflow: hidden;
-    isolation: isolate;
-    background: linear-gradient(
-        155deg,
-        color-mix(in srgb, var(--accent-color) 56%, white) 0%,
-        var(--accent-color) 45%,
-        color-mix(in srgb, var(--accent-color) 70%, black) 100%
-    );
-    border: 1px solid color-mix(in srgb, var(--accent-color) 52%, black);
-    color: var(--bg-secondary);
+    background: var(--chip-face);
+    border: 1px solid var(--chip-edge);
+    color: var(--chip-ink);
     padding: 8px 12px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-    transition: transform 0.15s ease, filter 0.25s ease, box-shadow 0.25s ease;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 650;
+    transition: transform 0.18s ease, filter 0.2s ease, box-shadow 0.2s ease;
     display: none;
-    box-shadow:
-        inset 0 1px 3px color-mix(in srgb, white 44%, transparent),
-        inset 0 -2px 6px color-mix(in srgb, black 14%, transparent),
-        0 3px 12px color-mix(in srgb, var(--accent-color) 30%, transparent),
-        0 2px 6px rgba(0, 0, 0, 0.12);
-    text-shadow: 0 1px 2px color-mix(in srgb, black 22%, transparent);
+    box-shadow: var(--chip-rest);
 }
 
 .sidebar-toggle:hover {
-    filter: brightness(1.08) saturate(1.06);
-    box-shadow:
-        inset 0 2px 4px color-mix(in srgb, white 48%, transparent),
-        inset 0 -3px 8px color-mix(in srgb, black 18%, transparent),
-        0 5px 18px color-mix(in srgb, var(--accent-color) 40%, transparent);
+    filter: brightness(1.05) saturate(1.05);
+    transform: translateY(-1px);
+    box-shadow: var(--chip-hover);
 }
 
 .sidebar-toggle:active {
-    transform: scale(0.97);
-    filter: brightness(0.94);
+    transform: translateY(0) scale(0.985);
+    filter: brightness(0.97);
+    box-shadow: var(--chip-active);
 }
 
 /* Responsive design for sidebar */
@@ -983,15 +1197,423 @@ footer {
     }
 }
 
+/* One-shot sheen sweep, played on hover by .nav-btn / .theme-switcher. */
 @keyframes gold-nugget-glint {
-    0%, 100% {
-        opacity: 0.42;
-        transform: translateX(-5%);
+    from {
+        opacity: 0.8;
+        transform: translateX(0);
     }
-    50% {
-        opacity: 0.72;
-        transform: translateX(5%);
+    to {
+        opacity: 0;
+        transform: translateX(420%);
     }
+}
+
+/* ===========================================================================
+   Generated documentation.
+
+   Everything below styles markup this repo does not write by hand:
+
+     * `nim md2html` output driven by nimdoc.cfg — the manual, install page,
+       index and FAQ. Its inline code is `<tt class="docutils literal">`,
+       which had no rule at all, so ~960 code spans in the manual rendered as
+       ordinary prose.
+     * `dagon` output — the stdlib reference under site/stdlib. Its whole
+       vocabulary (ul.decls, pre.sig, span.kw/.name/.op/.lit, a.typeref,
+       ul.modules, ul.index) was likewise unstyled.
+
+   Colours come from the same two palettes as the rest of the page, so the
+   reference matches the site in both themes.
+   =========================================================================== */
+
+/* --- Inline code from md2html -------------------------------------------- */
+tt.docutils, tt.literal, code.docutils {
+    background-color: var(--code-bg);
+    color: var(--accent-2);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-size: 0.88em;
+    border: 1px solid color-mix(in srgb, var(--code-border) 85%, transparent);
+    overflow-wrap: break-word;
+}
+
+/* The inner <span class="pre"> must not re-apply the chrome. */
+tt.docutils span.pre,
+tt.literal span.pre {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+}
+
+pre.listing {
+    white-space: pre;
+}
+
+/* Outbound links get a quiet marker; internal cross-references do not. */
+a.reference.external::after {
+    content: "↗";
+    font-size: 0.75em;
+    margin-left: 0.25em;
+    vertical-align: 0.25em;
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+/* --- Option lists (md2html) ---------------------------------------------- */
+.option-list {
+    margin: 20px 0;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.option-list-item {
+    display: grid;
+    grid-template-columns: minmax(9rem, 22%) 1fr;
+    gap: 0 18px;
+    padding: 9px 14px;
+    align-items: baseline;
+}
+
+.option-list-item.odd {
+    background-color: color-mix(in srgb, var(--third-background) 45%, transparent);
+}
+
+.option-list-label {
+    font-weight: 600;
+}
+
+.option-list-description {
+    color: var(--text-muted);
+}
+
+@media (max-width: 620px) {
+    .option-list-item {
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+}
+
+/* --- Admonitions and messages (nimdoc.cfg) -------------------------------- */
+.admonition,
+.deprecation-message {
+    margin: 22px 0;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--hint);
+    background-color: var(--third-background);
+}
+
+.admonition-info { border-left-color: var(--info-background); }
+.admonition-warning { border-left-color: var(--warning-background); }
+.admonition-error,
+.deprecation-message { border-left-color: var(--error-background); }
+
+.module-desc {
+    color: var(--text-muted);
+    max-width: 74ch;
+}
+
+/* --- Two-column doc layout (nimdoc.cfg doc.body_toc_group) ---------------- */
+/* Wide screens: a sticky table of contents beside the content. Narrow ones
+   fall back to a single column with the TOC on top. */
+.row {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(20px, 3vw, 40px);
+    align-items: start;
+}
+
+.row > .three.columns {
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    font-size: 0.9rem;
+    padding-right: 6px;
+}
+
+.row > .nine.columns {
+    min-width: 0;
+}
+
+@media (max-width: 900px) {
+    .row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .row > .three.columns {
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+.theme-select-wrapper,
+.search-groupby,
+#searchInputDiv {
+    margin-bottom: 12px;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+#searchInput,
+select {
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 5px 8px;
+    max-width: 100%;
+}
+
+#searchInput:focus,
+select:focus {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 1px;
+    border-color: var(--accent-2);
+}
+
+.simple-toc,
+.simple-toc ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.simple-toc ul {
+    padding-left: 12px;
+    border-left: 1px solid var(--border-color);
+    margin-left: 4px;
+}
+
+.simple-toc li {
+    margin-bottom: 2px;
+}
+
+.simple-toc a {
+    display: block;
+    padding: 3px 7px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+}
+
+.simple-toc a:hover {
+    background-color: var(--third-background);
+    color: var(--accent-color);
+}
+
+.reference-toplevel {
+    font-weight: 650;
+}
+
+summary {
+    cursor: pointer;
+}
+
+summary::marker {
+    color: var(--accent-color);
+}
+
+/* --- Declaration entries (nimdoc.cfg doc.item) ---------------------------- */
+.section > h1 {
+    font-size: 1.5rem;
+    margin: 2em 0 0.6em;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+dl.item {
+    margin: 0;
+}
+
+dl.item > div,
+ul.decls > li {
+    margin: 18px 0;
+    padding: 14px 16px;
+    background-color: color-mix(in srgb, var(--third-background) 40%, transparent);
+    border: 1px solid var(--border-color);
+    border-left: 3px solid color-mix(in srgb, var(--accent-soft) 60%, var(--border-color));
+    border-radius: var(--radius-sm);
+    scroll-margin-top: 24px;
+}
+
+dl.item dt > pre,
+ul.decls pre.sig,
+ul.decls > li > code {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+}
+
+dl.item dd {
+    margin: 10px 0 0 0;
+    color: var(--text-muted);
+}
+
+dl.item dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.link-seesrc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* The landing highlight after following an anchor. */
+:target {
+    animation: target-flash 1.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :target {
+        animation: none;
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+    }
+}
+
+@keyframes target-flash {
+    from {
+        background-color: color-mix(in srgb, var(--accent-soft) 30%, transparent);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-soft) 22%, transparent);
+    }
+}
+
+/* --- dagon: stdlib reference --------------------------------------------- */
+ul.decls {
+    list-style: none;
+    padding-left: 0;
+    max-width: none;
+}
+
+/* The source path dagon prints under the module title. */
+main > h1 + p > small {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.moduledoc {
+    color: var(--text-muted);
+    max-width: 74ch;
+}
+
+/* dagon's short token classes, mapped onto the shared syntax palette. */
+.decls .kw, .sig .kw { color: var(--keyword); font-weight: 600; }
+.decls .name, .sig .name { color: var(--identifier); font-weight: 650; }
+.decls .op, .sig .op { color: var(--punctuation); }
+.decls .lit, .sig .lit { color: var(--literal); }
+
+a.typeref {
+    color: var(--accent-2);
+    text-decoration: none;
+    border-bottom: 1px dotted color-mix(in srgb, var(--accent-2) 55%, transparent);
+}
+
+a.typeref:hover {
+    color: var(--link-hover);
+    border-bottom-style: solid;
+}
+
+/* Module directory on theindex.html — a grid rather than a 54-item column. */
+ul.modules {
+    list-style: none;
+    padding-left: 0;
+    max-width: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 8px;
+}
+
+ul.modules li {
+    margin: 0;
+}
+
+ul.modules a {
+    display: block;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: border-color 0.15s ease, background-color 0.15s ease,
+                transform 0.15s ease;
+}
+
+ul.modules a:hover {
+    border-color: var(--accent-color);
+    background-color: color-mix(in srgb, var(--accent-soft) 12%, var(--bg-secondary));
+    color: var(--accent-color);
+    transform: translateY(-1px);
+}
+
+/* Symbol index: 2000+ rows, so keep each one to a single quiet line. */
+ul.index {
+    list-style: none;
+    padding-left: 0;
+    max-width: none;
+}
+
+ul.index > li {
+    margin: 0;
+    padding: 6px 10px;
+    border-bottom: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
+    line-height: 1.5;
+}
+
+ul.index > li:hover {
+    background-color: color-mix(in srgb, var(--third-background) 55%, transparent);
+}
+
+ul.index .name {
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    font-weight: 650;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+ul.index .name:hover {
+    color: var(--accent-color);
+}
+
+/* `func`, `proc`, `template`, … as a small badge. */
+ul.index .kind {
+    display: inline-block;
+    margin: 0 0.35em;
+    padding: 0 0.45em;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    background-color: color-mix(in srgb, var(--accent-soft) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent);
+    vertical-align: 0.05em;
+}
+
+ul.index .sum {
+    color: var(--text-muted);
 }
 
 /* Print styles - hide navigation and sidebar elements */
@@ -1029,11 +1651,29 @@ footer {
     }
 
     /* Ensure header is properly styled for print */
-    header {
+    header,
+    header:not(.nav-controls) {
         background: none !important;
+        background-image: none !important;
         border: none !important;
         padding: 10px 0 !important;
         margin-bottom: 20px !important;
+    }
+
+    /* The photo scrim, the horizon rule and the accent band on <main>. */
+    header:not(.nav-controls)::before,
+    header:not(.nav-controls)::after,
+    main::before {
+        display: none !important;
+    }
+
+    /* Print the reference in one column. */
+    .row {
+        display: block !important;
+    }
+
+    .row > .three.columns {
+        display: none !important;
     }
 
     /* Ensure footer is properly styled for print */

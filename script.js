@@ -1,22 +1,41 @@
-// Theme switching functionality
-function toggleTheme() {
+// Theme switching functionality.
+//
+// The theme is always pinned as an explicit data-theme ("light" or "dark")
+// rather than left unset for light, so that toggling stays in step with the
+// OS preference: style.css styles a root with no data-theme as dark when the
+// OS asks for dark, and without an explicit value the first click would flip
+// the label without changing anything visible.
+function applyTheme(theme) {
     const root = document.documentElement;
     const button = document.querySelector('.theme-switcher');
 
-    if (root.getAttribute('data-theme') === 'dark') {
-        // Switch to light theme
-        root.removeAttribute('data-theme');
-        button.textContent = '🌙 Dark';
-        button.title = 'Switch to dark theme';
-    } else {
-        // Switch to dark theme
-        root.setAttribute('data-theme', 'dark');
-        button.textContent = '🌙 Light';
-        button.title = 'Switch to light theme';
+    root.setAttribute('data-theme', theme);
+
+    if (button) {
+        button.textContent = theme === 'dark' ? '🌙 Light' : '🌙 Dark';
+        button.title = theme === 'dark'
+            ? 'Switch to light theme'
+            : 'Switch to dark theme';
     }
+}
+
+function preferredTheme() {
+    const saved = localStorage.getItem('nimony-theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia &&
+           window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+}
+
+function toggleTheme() {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark'
+        ? 'light'
+        : 'dark';
+    applyTheme(next);
 
     // Save preference to localStorage
-    localStorage.setItem('nimony-theme', root.getAttribute('data-theme') || 'light');
+    localStorage.setItem('nimony-theme', next);
 }
 
 // Sidebar toggle functionality
@@ -269,20 +288,8 @@ function setupPageNavKeyboard() {
 
 // Load saved preferences and initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Load saved theme preference
-    const savedTheme = localStorage.getItem('nimony-theme');
-    const button = document.querySelector('.theme-switcher');
-
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        if (button) {
-            button.textContent = '🌙 Light';
-            button.title = 'Switch to light theme';
-        }
-    } else if (button) {
-        button.textContent = '🌙 Dark';
-        button.title = 'Switch to dark theme';
-    }
+    // Saved preference, else whatever the OS asks for
+    applyTheme(preferredTheme());
 
     // Load saved sidebar preference
     const savedSidebarCollapsed = localStorage.getItem('nimony-sidebar-collapsed');
