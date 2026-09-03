@@ -46,6 +46,8 @@ jobs:
           # so overlay fresh compiler sources on top of the nightly's bootstrap.
           git clone --depth 1 --branch devel https://github.com/nim-lang/Nim nim-src
           cp -a nim-src/compiler/. nim/compiler/
+          cp -a nim-src/lib/packages/docutils/. nim/lib/packages/docutils/
+ 
 
       - name: Checkout nim-lang/nimony (docs)
         uses: actions/checkout@v6
