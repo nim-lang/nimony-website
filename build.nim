@@ -126,28 +126,46 @@ proc buildLocalConfiguredDoc(src, dest: string; man = false) =
 proc toolExePath(nimonyDir, tool: string): string =
   nimonyDir / "bin" / (tool & ExeExt)
 
-proc buildNimonyTool(nimonyDir, tool, source: string) =
-  let exe = "bin" / (tool & ExeExt)
-  execInDir(nimonyDir, "nim c -d:release --warning[ProveInit]:off --out:" &
-      exe.quoteShell & " " & source.quoteShell)
+## Every binary the doc build ends up shelling out to. Generating the stdlib
+## docs is a FULL compile, not just a parse: `tall.nim` pulls in stdlib modules
+## that use a macro plugin, so nimony compiles `lib/std/deps/smartcli.nim`
+## through the entire C pipeline (nifler -> nimsem -> hexer -> cc -> niflink)
+## before it can sem the modules being documented.
+##
+## A missing tool is not reported as a missing tool: `findTool` (src/lib/
+## tooldirs.nim) falls back to the bare name, so the generated build file gets
+## `hexer` instead of `<nimony>/bin/hexer` and the build dies deep inside
+## nifmake with `/bin/sh: 1: hexer: not found`. That is exactly what broke CI
+## while this list was maintained by hand here and drifted behind the
+## compiler's pipeline.
+const docTools = ["nifler", "nimsem", "nimony", "hexer", "lengc", "niflink",
+                  "nifmake", "shoggoth", "validator", "dagon"]
 
 proc ensureNimonyDocTools(nimonyDir: string): string =
-  const docTools = [
-    ("nifler", "src/nifler/nifler.nim"),
-    ("nimsem", "src/nimony/nimsem.nim"),
-    ("nifmake", "src/nifmake/nifmake.nim"),
-    ("dagon", "src/dagon/dagon.nim"),
-    ("nimony", "src/nimony/nimony.nim")
-  ]
-
-  createDir(nimonyDir / "bin")
-  for (tool, source) in docTools:
+  var missing: seq[string] = @[]
+  for tool in docTools:
     if not fileExists(toolExePath(nimonyDir, tool)):
-      buildNimonyTool(nimonyDir, tool, source)
+      missing.add tool
+
+  if missing.len > 0:
+    # Delegate to hastur — the canonical toolchain build, the same command
+    # nightly.yml runs — instead of re-listing `nim c` invocations here. That
+    # keeps the produced binaries in sync with whatever the compiler shells out
+    # to, which a hand-written list here cannot do.
+    #
+    # `build all` also wants arkham + nifasm from the sibling `../nativenif`
+    # checkout; it prints a skip notice and succeeds when that is absent, which
+    # is the case in this repo's CI and is fine — the docs use the C backend.
+    echo "[build] building the Nimony toolchain in ", nimonyDir,
+         " (missing: ", missing.join(", "), ")"
+    execInDir(nimonyDir, "nim c -r src/hastur/hastur --release build all")
+
+    for tool in missing:
+      if not fileExists(toolExePath(nimonyDir, tool)):
+        quit "FAILURE: `hastur build all` did not produce " &
+             toolExePath(nimonyDir, tool)
 
   result = toolExePath(nimonyDir, "nimony")
-  if not fileExists(result):
-    quit "FAILURE: building Nimony doc tools did not produce " & result
 
 when defined(local):
   const nimonyDir = "../nimony"

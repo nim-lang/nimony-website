@@ -20,8 +20,9 @@ permissions:
 jobs:
   # Build job
   build:
-    # Specify runner +  build & upload the static files as an artifact
-    runs-on: ubuntu-latest
+    # Pinned, not `ubuntu-latest`: the docs build compiles C now (see the gcc-14
+    # step below), and nimony's own CI validates exactly this image.
+    runs-on: ubuntu-24.04
     outputs:
       has_changes: ${{ steps.check-changes.outputs.has_changes }}
     steps:
@@ -29,6 +30,17 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 1
+
+      - name: Make gcc-14 the default C compiler
+        run: |
+          # Generating the stdlib docs is a full nimony compile — `tall.nim`
+          # reaches a macro plugin, which nimony builds through hexer and cc —
+          # so the C compiler is part of this build, not just Nim. gcc-14 is
+          # what nimony's own CI and this repo's nightly.yml test with; the
+          # 24.04 image defaults to gcc-13, which nothing validates. Both are
+          # preinstalled, so this only flips the alternative (a few seconds).
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 60 \
+            --slave /usr/bin/g++ g++ /usr/bin/g++-14
 
       # nifler compiles Nim's own compiler/parser.nim (resolved via `--path:$nim`,
       # see nimony/src/nifler/nim.cfg), so the stdlib docs can only be parsed by a
@@ -57,6 +69,18 @@ jobs:
           ref: master
           submodules: recursive
           fetch-depth: 0  # Get full history to check for changes
+
+      - name: Create dist/nimony symlink for Nim compiler
+        run: |
+          # Nim devel's compiler imports `../dist/nimony/src/lib/...` (ast2nif,
+          # icnifcore, deps, ...), so the sources overlaid above only compile
+          # when that path resolves. nifler compiles Nim's `compiler/parser.nim`
+          # and today reaches none of those modules, but nothing guarantees that
+          # — nimony's ci.yml and this repo's nightly.yml both stage the link,
+          # and it must come after the nimony checkout it points at.
+          rm -rf nim/dist/nimony
+          mkdir -p nim/dist
+          ln -sf "${{ github.workspace }}/nimony" nim/dist/nimony
 
       - name: Check for changes in nimony
         id: check-changes
