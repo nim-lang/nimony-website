@@ -1,7 +1,7 @@
 # Nimony
 ## Efficient, expressive, elegant
 
-**Nimony** is a **new compiler** organised around [NIF](https://github.com/nim-lang/nifspec): a plugin-friendly interchange format through the whole pipeline, with **incremental** and **parallel** builds. The evolving **Nim 3** language features (borrow checking, explicit nilability, sum types, concepts-on-generics, …) are built  on top of that foundation.
+**Nimony** is a new compiler for Nim, organised around [NIF](https://github.com/nim-lang/nifspec): an interchange format that every stage of the pipeline reads and writes. NIF is what makes plugins possible and it is also how we can offer **incremental** and **parallel** builds. The **Nim 3** language features (borrow checking, explicit nilability, sum types, checked generics, …) are built on top of it.
 
 With plugins you can go far beyond what a macro system can accomplish easily:
 
@@ -12,7 +12,7 @@ With plugins you can go far beyond what a macro system can accomplish easily:
 - **Custom code generators**
   - compile a **subset of Nim to GPUs**
   - compile toward **FPGAs**
-- **Custom DSLs**, supported more cleanly than in Nim today—for example **lexer** and **parser generators**
+- **Custom DSLs**, supported more cleanly than in Nim today — for example **lexer** and **parser generators**
 
 For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
@@ -20,7 +20,7 @@ For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
 Prebuilt toolchains are published every day.
 
-[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases) and grab the newest archive for your platform. We currently offer builds for: Linux x86_64, Linux ARM64, macOS ARM64, or Windows x86_64.
+[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases) and grab the newest archive for your platform. We currently offer builds for Linux x86_64, Linux ARM64, macOS ARM64 and Windows x86_64.
 
 Extract the archive, add its `bin/` directory to your `PATH`, and make sure a C compiler (`gcc` or `clang`) is available. On Windows, run `hastur install` from the extracted directory to fetch the bundled MinGW+LLVM toolchain. Or [build from source](install.html).
 
@@ -30,7 +30,7 @@ Below are small **language** sketches Nimony emphasizes alongside that toolchain
 
 ## Sum types (algebraic data types)
 
-Variant objects no longer need a separate discriminator enum: tags live in the `case` section, and **`case value of Tag(fields):`** pattern matching binds the fields for that arm—like expressions you’d write in ML-family languages, checked for exhaustiveness.
+Variant objects no longer need a separate discriminator enum: tags live in the `case` section, and **`case value of Tag(fields):`** pattern matching binds the fields for that arm — like expressions you’d write in ML-family languages, checked for exhaustiveness.
 
 ```nim
 type
@@ -53,7 +53,7 @@ proc eval(e: Expr): int =
 echo eval(Add(left: Lit(value: 10), right: Lit(value: 32)))  # 42
 ```
 
-Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a branch), and grouped matchers like `{Add, Sub}(left, right)` appear where multiple tags share the same shape—see **Case in object** in the [manual](language.html).
+Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a branch), and grouped matchers like `{Add, Sub}(left, right)` appear where multiple tags share the same shape — see **Case in object** in the [manual](language.html).
 
 ----
 
@@ -70,13 +70,13 @@ var s = @[1, 2, 3]
 #   grow(s, v)   # Error: `s` is borrowed during iteration — no realloc under active borrows
 ```
 
-This follows **prefix exclusion**: while `s` (or `s.elements`) is borrowed, that path cannot be mutated until the borrow ends—sibling fields can still be updated.
+This follows **prefix exclusion**: while `s` (or `s.elements`) is borrowed, that path cannot be mutated until the borrow ends — sibling fields can still be updated.
 
 ----
 
 ## Type checked generics
 
-Duck typing for containers is opt-in, the new default are type checked generics. In other words, generics are check at instantiation time!
+By default generics are type checked: the code is checked when the generic is **defined**, not only when it is instantiated! Duck typing is still available, you get it via the `{.untyped.}` pragma.
 
 The required operations are described via concepts:
 

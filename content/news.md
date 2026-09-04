@@ -1,7 +1,6 @@
 # News
 
-Release announcements and reports from the Nimony project. The newest entry is
-first.
+Release announcements and reports from the Nimony project. Newest first.
 
 ----
 
@@ -9,12 +8,10 @@ first.
 
 **2026-09-04** · *tokyovigilante*
 
-Nimony 0.6 is out. Instead of a feature list, this release comes with a guest
-report from a user who spent the past year moving a stack of real projects —
-a Vulkan scientific visualiser, a web framework, an embedded server — onto the
-new compiler. It covers the concurrency wall that OS threads plus async/await
-ran them into, and what `.passive` procs and CPS changed once they ported to
-Nimony.
+Nimony 0.6 is out. For this release tokyovigilante wrote up their first year
+with Nim. They built a lot with it: a Vulkan scientific visualiser, a web
+framework, an embedded server. Then OS threads plus async/await stopped being
+manageable and they hit a wall. Passive procs are what got them past it.
 
 [→ Read the article](version0_6.html)
 
@@ -24,11 +21,10 @@ Nimony.
 
 **2025-11-01** · *planetis*
 
-Our first release. Rather than a generic enthusiastic announcement, we asked
-planetis for an honest review of where Nimony actually stood: a 250-line
-Tic-Tac-Toe game with an AI in a worker thread, a tour of the standard library
-modules that had been ported, and a frank list of the rough edges — type
-resolution errors, missing templates, and the compiler crash that got fixed the
-same day it was reported.
+Our first release. We asked planetis for an honest review of the compiler.
+They wrote a 250 line Tic-Tac-Toe game with an AI running in a worker thread
+and reported what worked and what did not: type resolution errors, missing
+templates, one compiler crash. The crash was fixed the same day it was
+reported.
 
 [→ Read the article](version0_2.html)

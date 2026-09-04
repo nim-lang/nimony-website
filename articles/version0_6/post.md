@@ -4,10 +4,8 @@
 
 ## Author: "tokyovigilante"
 
-*Nimony 0.6 is out. Rather than a feature list, here is a guest report from a
-user who moved a stack of real projects onto the new compiler over the past
-year — what pulled them to Nim, where they hit a wall, and what Nimony's
-passive procs changed.*
+*Nimony 0.6 is out. For this release we asked tokyovigilante to write about
+their first year with Nim and about porting their projects over to Nimony.*
 
 ## Finding Nim
 
@@ -68,12 +66,12 @@ Although Nimony is still early in development, with CPS in particular my code is
 
 ## Getting Nimony 0.6
 
-Prebuilt toolchains for Linux x86_64, Linux ARM64, macOS ARM64 and Windows
-x86_64 are published as [nightly releases](https://github.com/nim-lang/nimony-website/releases);
-each archive pins the exact compiler revision it was built from. To build the
-compiler yourself instead, follow the [installation instructions](install.html).
+Prebuilt toolchains are published every day.
+[Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases)
+for Linux x86_64, Linux ARM64, macOS ARM64 and Windows x86_64, or
+[build from source](install.html).
 
-Bug reports, questions and PRs are all welcome at
-[nim-lang/nimony](https://github.com/nim-lang/nimony). If you want this
-direction to continue but your time is scarce, contributions are welcome via
-our [Open Collective](https://opencollective.com/nim).
+Bug reports, questions and PRs are welcome at
+[nim-lang/nimony](https://github.com/nim-lang/nimony). If your time is scarce
+but you want this direction to continue, you can support us via our
+[Open Collective](https://opencollective.com/nim).
