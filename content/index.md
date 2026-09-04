@@ -1,11 +1,9 @@
 # Nimony
 ## Efficient, expressive, elegant
 
-**Why Nimony exists:** the whole compiler is organized around [NIF](https://github.com/nim-lang/nifspec), an interchange format you can plug tools into. That plugin ecosystem is what Nimony is *for*—and it also delivers **incremental** and **parallel** builds in a way the classic Nim compiler does not.
+**Nimony** is a **new compiler** organised around [NIF](https://github.com/nim-lang/nifspec): a plugin-friendly interchange format through the whole pipeline, with **incremental** and **parallel** builds. The evolving **Nim 3** language features (borrow checking, explicit nilability, sum types, concepts-on-generics, …) are built  on top of that foundation.
 
-Along the pipeline, Nimony lowers structured programs into **NJ**, an IR where control flow has only **loops** and **`if`**—**no unstructured control flow**. Both **validators** and **code generators** become dramatically simpler to write than against arbitrary CFGs or macros bolted onto the frontend.
-
-With plugins on top of NIF / NJ you can go far beyond a plain compiler driver—for example:
+With plugins you can go far beyond what a macro system can accomplish easily:
 
 - **Custom validators**
   - look for possible **deadlocks**
@@ -20,9 +18,9 @@ For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
 ## Nightly builds
 
-Prebuilt toolchains are published every day. Each build is its own versioned release — archives are named `nimony-<version>-<commit>-<platform>` (e.g. `nimony-0.4.0-a1b2c3d4e-linux_amd64.tar.xz`) so a download always pins the exact compiler revision.
+Prebuilt toolchains are published every day.
 
-[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases) and grab the newest archive for your platform: Linux x86_64, Linux ARM64, macOS ARM64, or Windows x86_64.
+[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases) and grab the newest archive for your platform. We currently offer builds for: Linux x86_64, Linux ARM64, macOS ARM64, or Windows x86_64.
 
 Extract the archive, add its `bin/` directory to your `PATH`, and make sure a C compiler (`gcc` or `clang`) is available. On Windows, run `hastur install` from the extracted directory to fetch the bundled MinGW+LLVM toolchain. Or [build from source](install.html).
 
@@ -61,8 +59,6 @@ Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a b
 
 ## Borrow checking — iterator safety and aliasing
 
-(Nimony tightens memory aliasing rules—nice-to-have safety on top of the pipeline story.)
-
 Nimony rejects classic footguns at compile time:
 
 ```nim
@@ -78,9 +74,11 @@ This follows **prefix exclusion**: while `s` (or `s.elements`) is borrowed, that
 
 ----
 
-## Concepts describe what generics need
+## Type checked generics
 
-Concepts list required operations; generics use them so APIs are checked at definition and instantiation—duck typing for containers is gone:
+Duck typing for containers is opt-in, the new default are type checked generics. In other words, generics are check at instantiation time!
+
+The required operations are described via concepts:
 
 ```nim
 type
@@ -94,7 +92,7 @@ echo min(3, 7)
 echo min("b", "a")
 ```
 
-Container-style concepts (e.g. `Findable[T]`) work the same way with iterators and indexed access—see **Concepts** and **Generics** in the [manual](language.html).
+Container-style concepts (e.g. `Findable[T]`) work the same way with iterators and indexed access — see **Concepts** and **Generics** in the [manual](language.html).
 
 
 ----
