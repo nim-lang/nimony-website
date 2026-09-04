@@ -12,7 +12,7 @@
 
 Plugins are the evolution of Nim’s macro system. Plugins can be used for:
 
-- **Custom validators** — for example analysis passes hunting possible **deadlocks**, **race conditions**, or dangerous **recursion** when stack space is tiny (embedded targets).
+- **Custom validators** — for example analysis passes hunting possible **deadlocks**, **race conditions**, or dangerous **recursions** when stack space is tiny (embedded targets).
 - **Custom code generators** — such as lowering a **subset of Nim** toward **GPUs** or **FPGAs**.
 - **Custom DSLs** — including **lexer** and **parser generators**, that run at full speed as plugins are compiled to native code.
 
