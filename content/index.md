@@ -55,7 +55,7 @@ proc eval(e: Expr): int =
 echo eval(Add(left: Lit(value: 10), right: Lit(value: 32)))  # 42
 ```
 
-Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a branch), and grouped matchers like `{Add, Sub}(left, right)` appear where multiple tags share the same shape—see **Case in object** in the [manual](manual.html).
+Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a branch), and grouped matchers like `{Add, Sub}(left, right)` appear where multiple tags share the same shape—see **Case in object** in the [manual](language.html).
 
 ----
 
@@ -94,11 +94,16 @@ echo min(3, 7)
 echo min("b", "a")
 ```
 
-Container-style concepts (e.g. `Findable[T]`) work the same way with iterators and indexed access—see **Concepts** and **Generics** in the [manual](manual.html).
+Container-style concepts (e.g. `Findable[T]`) work the same way with iterators and indexed access—see **Concepts** and **Generics** in the [manual](language.html).
 
 
 ----
 
-# News
+# Latest news
 
-**2025-11-01** We have our first release! Version 0.2! Read this [article](version0_2.html) for more information.
+**2026-09-04** Nimony **0.6** is released. It ships with a guest report from a
+user who spent a year porting real projects — a Vulkan visualiser, a web
+framework, an embedded server — over to it: [Nim, one year in](version0_6.html).
+
+Older entries, including the [0.2 release](version0_2.html), live on the
+[News](news.html) page.
