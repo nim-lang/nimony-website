@@ -227,7 +227,7 @@ color: var(--other); }
     --shadow-sm: 0 1px 2px rgba(84, 46, 52, 0.07);
     --shadow-md: 0 8px 28px rgba(84, 46, 52, 0.09);
     --shadow-lg: 0 18px 48px rgba(84, 46, 52, 0.13);
-    --scrim: 0.76;
+    --scrim: 0.55;
     --radius: 12px;
     --radius-sm: 7px;
 }
@@ -255,7 +255,7 @@ color: var(--other); }
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 10px 34px rgba(0, 0, 0, 0.55);
     --shadow-lg: 0 22px 56px rgba(0, 0, 0, 0.62);
-    --scrim: 0.76;
+    --scrim: 0.55;
     --radius: 12px;
     --radius-sm: 7px;
 }
@@ -285,7 +285,7 @@ color: var(--other); }
         --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
         --shadow-md: 0 10px 34px rgba(0, 0, 0, 0.55);
         --shadow-lg: 0 22px 56px rgba(0, 0, 0, 0.62);
-        --scrim: 0.76;
+        --scrim: 0.55;
         --radius: 12px;
         --radius-sm: 7px;
     }
@@ -354,10 +354,10 @@ header:not(.nav-controls) {
 
 /* The scrim, and the one place in this file where the numbers are not taste.
    Text sits on a photograph, so the floor is whatever the worst pixel does.
-   0.76 over this crop measures 5.9:1 or better behind the actual glyphs, on
-   both the index and the longer manual title, at 1280px and 390px, in both
-   themes. Earlier passes at 0.5 fell to 3.98:1 over the silhouettes. If you
-   swap the image or restyle the band, re-measure -- do not eyeball it. */
+   0.76 over the darker crop measured 5.9:1 or better behind the glyphs; with
+   the brighter background.jpg, 0.55 keeps more of the photo visible while
+   staying above the old 0.5 pass that fell to 3.98:1 over the silhouettes.
+   If you swap the image or restyle the band, re-measure -- do not eyeball it. */
 header:not(.nav-controls)::before {
     content: "";
     position: absolute;
