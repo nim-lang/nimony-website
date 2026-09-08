@@ -8,7 +8,7 @@ Release announcements and reports from the Nimony project. Newest first.
 
 **2026-09-08** · *Araq*
 
-The second stable release on the 0.6 line. `std/http` joins the standard
+The first stable release on the 0.6 line. `std/http` joins the standard
 library, generic `.passive` procs may now suspend and delay-spawn, `.passive`
 combines with `.raise`, and all exception lowering has moved into a single
 pass in hexer. Behind those: concept requirements anchored to `Self`, a pile
@@ -21,11 +21,11 @@ page, or [build from source](install.html).
 
 ----
 
-## Nimony v0.6 — Nim, one year in
+## Nimony v0.6.2 — Nim, one year in
 
-**2026-09-04** · *tokyovigilante*
+**2026-09-08** · *tokyovigilante*
 
-Nimony 0.6 is out. Instead of a feature list, this release comes with a guest
+Nimony 0.6.2 is out. Instead of a feature list, this release comes with a guest
 report from a user who spent the past year moving a stack of real projects —
 a Vulkan scientific visualiser, a web framework, an embedded server — onto the
 new compiler. It covers the benefits of `.passive` procs and CPS.

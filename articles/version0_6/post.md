@@ -1,11 +1,11 @@
 # Nimony v0.6 — Nim, one year in
 
-**2026-09-04**
+**2026-09-08**
 
 ## Author: "tokyovigilante"
 
-*Nimony 0.6 is out. For this release we asked tokyovigilante to write about
-their first year with Nim and about porting their projects over to Nimony.*
+*Nimony 0.6.2 is out. For this release we asked tokyovigilante to write about
+his first year with Nim and about porting his projects over to Nimony.*
 
 ## Finding Nim
 
