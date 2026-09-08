@@ -67,9 +67,20 @@ jobs:
 
           # The canonical Nimony version is doc/version.md (the same file every
           # tool `slurp`s for its --version). Read it at the resolved commit.
-          version=$(curl -fsSL "https://raw.githubusercontent.com/nim-lang/nimony/$commit/doc/version.md" | tr -d '[:space:]')
-          if [ -z "$version" ]; then
-            echo "Could not read doc/version.md at $commit" >&2
+          #
+          # The file is `<version> <ISO date>` — the date was added on
+          # 2026-09-02 and is READABILITY ONLY; only the first field is the
+          # version. Take that field, exactly as `lib/nimversion.firstField`
+          # does. The previous `tr -d '[:space:]'` deleted the separator too and
+          # glued the two together, so every nightly from 2026-09-02 on shipped
+          # as `0.6.02026-09-01` in its tag and asset names.
+          version=$(curl -fsSL "https://raw.githubusercontent.com/nim-lang/nimony/$commit/doc/version.md" \
+                    | tr -d '\r' | awk 'NR == 1 { print $1; exit }')
+          # Assert the shape rather than trusting it: this went wrong silently
+          # once already, and a junk version poisons the tag AND every asset
+          # name, which are the URLs people link to.
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "doc/version.md at $commit did not yield a version: '$version'" >&2
             exit 1
           fi
 
