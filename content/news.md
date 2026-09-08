@@ -4,6 +4,23 @@ Release announcements and reports from the Nimony project. Newest first.
 
 ----
 
+## Nimony v0.6.2 — HTTP in the stdlib, and `.passive` grows up
+
+**2026-09-08** · *Araq*
+
+The second stable release on the 0.6 line. `std/http` joins the standard
+library, generic `.passive` procs may now suspend and delay-spawn, `.passive`
+combines with `.raise`, and all exception lowering has moved into a single
+pass in hexer. Behind those: concept requirements anchored to `Self`, a pile
+of overload-resolution and template fixes, and error messages where there used
+to be assertion failures.
+
+Prebuilt toolchains for Linux x86_64/ARM64, macOS ARM64 and Windows x86_64 are
+on the [nightly releases](https://github.com/nim-lang/nimony-website/releases)
+page, or [build from source](install.html).
+
+----
+
 ## Nimony v0.6 — Nim, one year in
 
 **2026-09-04** · *tokyovigilante*
