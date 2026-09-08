@@ -255,6 +255,39 @@ function triggerPageNavButton(button) {
     if (target) navigateToPage(target);
 }
 
+// Mark the nav chip for the page currently open, so the nav bar reads as a
+// tab bar. Every page's nav is generated from a different template (nimdoc.cfg
+// twice, multipage.nim, build.nim's dagon wrapper) and sits at a different
+// depth under site/, so the target is resolved against the current URL rather
+// than string-compared.
+function markCurrentPageNav() {
+    const buttons = document.querySelectorAll('.nav-controls button.nav-btn');
+
+    buttons.forEach(function(button) {
+        const target = getPageNavTarget(button);
+        if (!target) return;
+
+        const targetUrl = new URL(target, window.location.href);
+        // A directory URL is served by its index.html; without this the Home
+        // chip would never light up when the site is visited at its root.
+        const here = window.location.pathname.endsWith('/')
+            ? window.location.pathname + 'index.html'
+            : window.location.pathname;
+        let current = targetUrl.pathname === here;
+
+        // The library index stands in for every module page below it.
+        if (!current && targetUrl.pathname.endsWith('/theindex.html')) {
+            const dir = targetUrl.pathname.slice(0, -'theindex.html'.length);
+            current = here.startsWith(dir);
+        }
+
+        if (current) {
+            button.classList.add('nav-btn-current');
+            button.setAttribute('aria-current', 'page');
+        }
+    });
+}
+
 function setupPageNavKeyboard() {
     const pageNav = document.querySelector('.page-nav');
     if (!pageNav) return;
@@ -305,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateFileOverview();
     setupIntersectionObserver();
     setupPageNavKeyboard();
+    markCurrentPageNav();
 
     // Update current section on scroll
     window.addEventListener('scroll', updateCurrentSection);

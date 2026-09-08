@@ -1,11 +1,9 @@
 # Nimony
 ## Efficient, expressive, elegant
 
-**Why Nimony exists:** the whole compiler is organized around [NIF](https://github.com/nim-lang/nifspec), an interchange format you can plug tools into. That plugin ecosystem is what Nimony is *for*—and it also delivers **incremental** and **parallel** builds in a way the classic Nim compiler does not.
+**Nimony** is a new compiler for Nim, organised around [NIF](https://github.com/nim-lang/nifspec): an interchange format that every stage of the pipeline reads and writes. NIF is what makes plugins possible and it is also how we can offer **incremental** and **parallel** builds. The **Nim 3** language features (borrow checking, explicit nilability, sum types, checked generics, …) are built on top of it.
 
-Along the pipeline, Nimony lowers structured programs into **NJ**, an IR where control flow has only **loops** and **`if`**—**no unstructured control flow**. Both **validators** and **code generators** become dramatically simpler to write than against arbitrary CFGs or macros bolted onto the frontend.
-
-With plugins on top of NIF / NJ you can go far beyond a plain compiler driver—for example:
+With plugins you can go far beyond what a macro system can accomplish easily:
 
 - **Custom validators**
   - look for possible **deadlocks**
@@ -14,15 +12,15 @@ With plugins on top of NIF / NJ you can go far beyond a plain compiler driver—
 - **Custom code generators**
   - compile a **subset of Nim to GPUs**
   - compile toward **FPGAs**
-- **Custom DSLs**, supported more cleanly than in Nim today—for example **lexer** and **parser generators**
+- **Custom DSLs**, supported more cleanly than in Nim today — for example **lexer** and **parser generators**
 
 For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
 ## Nightly builds
 
-Prebuilt toolchains are published every day. Each build is its own versioned release — archives are named `nimony-<version>-<commit>-<platform>` (e.g. `nimony-0.4.0-a1b2c3d4e-linux_amd64.tar.xz`) so a download always pins the exact compiler revision.
+Prebuilt toolchains are published every day.
 
-[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases) and grab the newest archive for your platform: Linux x86_64, Linux ARM64, macOS ARM64, or Windows x86_64.
+[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases) and grab the newest archive for your platform. We currently offer builds for Linux x86_64, Linux ARM64, macOS ARM64 and Windows x86_64.
 
 Extract the archive, add its `bin/` directory to your `PATH`, and make sure a C compiler (`gcc` or `clang`) is available. On Windows, run `hastur install` from the extracted directory to fetch the bundled MinGW+LLVM toolchain. Or [build from source](install.html).
 
@@ -32,7 +30,7 @@ Below are small **language** sketches Nimony emphasizes alongside that toolchain
 
 ## Sum types (algebraic data types)
 
-Variant objects no longer need a separate discriminator enum: tags live in the `case` section, and **`case value of Tag(fields):`** pattern matching binds the fields for that arm—like expressions you’d write in ML-family languages, checked for exhaustiveness.
+Variant objects no longer need a separate discriminator enum: tags live in the `case` section, and **`case value of Tag(fields):`** pattern matching binds the fields for that arm — like expressions you’d write in ML-family languages, checked for exhaustiveness.
 
 ```nim
 type
@@ -55,13 +53,11 @@ proc eval(e: Expr): int =
 echo eval(Add(left: Lit(value: 10), right: Lit(value: 32)))  # 42
 ```
 
-Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a branch), and grouped matchers like `{Add, Sub}(left, right)` appear where multiple tags share the same shape—see **Case in object** in the [manual](manual.html).
+Shared fields can live outside the `case`, variants can nest (`seq[Tree]` in a branch), and grouped matchers like `{Add, Sub}(left, right)` appear where multiple tags share the same shape — see **Case in object** in the [manual](language.html).
 
 ----
 
 ## Borrow checking — iterator safety and aliasing
-
-(Nimony tightens memory aliasing rules—nice-to-have safety on top of the pipeline story.)
 
 Nimony rejects classic footguns at compile time:
 
@@ -74,13 +70,15 @@ var s = @[1, 2, 3]
 #   grow(s, v)   # Error: `s` is borrowed during iteration — no realloc under active borrows
 ```
 
-This follows **prefix exclusion**: while `s` (or `s.elements`) is borrowed, that path cannot be mutated until the borrow ends—sibling fields can still be updated.
+This follows **prefix exclusion**: while `s` (or `s.elements`) is borrowed, that path cannot be mutated until the borrow ends — sibling fields can still be updated.
 
 ----
 
-## Concepts describe what generics need
+## Type checked generics
 
-Concepts list required operations; generics use them so APIs are checked at definition and instantiation—duck typing for containers is gone:
+By default generics are type checked: the code is checked when the generic is **defined**, not only when it is instantiated! Duck typing is still available, you get it via the `{.untyped.}` pragma.
+
+The required operations are described via concepts:
 
 ```nim
 type
@@ -94,11 +92,16 @@ echo min(3, 7)
 echo min("b", "a")
 ```
 
-Container-style concepts (e.g. `Findable[T]`) work the same way with iterators and indexed access—see **Concepts** and **Generics** in the [manual](manual.html).
+Container-style concepts (e.g. `Findable[T]`) work the same way with iterators and indexed access — see **Concepts** and **Generics** in the [manual](language.html).
 
 
 ----
 
-# News
+# Latest news
 
-**2025-11-01** We have our first release! Version 0.2! Read this [article](version0_2.html) for more information.
+**2026-09-08** Nimony **0.6.2** has been released. It ships with a guest report from a
+user who spent a year porting real projects over. A Vulkan visualiser, a web
+framework, an embedded server: [Nim, one year in](version0_6.html).
+
+Older entries, including the [0.2 release](version0_2.html), live on the
+[News](news.html) page.

@@ -88,7 +88,7 @@ $8
 """ % [
     siteHref(pfx, "style.css"),
     siteHref(pfx, "index.html"),
-    siteHref(pfx, "index.html#news"),
+    siteHref(pfx, "news.html"),
     siteHref(pfx, "language.html"),
     siteHref(pfx, "install.html"),
     siteHref(pfx, "stdlib/theindex.html"),
@@ -110,6 +110,22 @@ proc buildArticles =
   for file in walkFiles("articles/*.gif"):
     let dest = file.splitFile.name
     copyFile file, "site/" & dest & ".gif"
+  # An article that ships its own images lives in a directory of its own:
+  # `articles/<slug>/post.md` plus `articles/<slug>/images/*`. The page is
+  # generated as `site/<slug>.html` at the site root and the images land in
+  # the shared `site/images/`, so the `images/foo.png` links the author wrote
+  # relative to `post.md` keep resolving in the built site. Directories
+  # without a `post.md` (e.g. `articles/untracked`) are drafts and skipped.
+  for dir in walkDirs("articles/*"):
+    let source = dir / "post.md"
+    if not fileExists(source): continue
+    let dest = dir.lastPathPart
+    exec "nim md2html -o:site/" & dest & ".html " & source
+    let imageDir = dir / "images"
+    if dirExists(imageDir):
+      createDir "site/images"
+      for image in walkFiles(imageDir / "*"):
+        copyFile image, "site/images" / image.lastPathPart
 
 proc buildLocalConfiguredDoc(src, dest: string; man = false) =
   let tempName = "content/tmp_" & dest.splitFile.name & ".md"
@@ -196,6 +212,7 @@ proc main() =
   buildLocalConfiguredDoc(nimonyDir & "/doc/language.md", "language.html", man = true)
   buildLocalConfiguredDoc(nimonyDir & "/doc/install.md", "install.html")
   exec "nim md2html -o:site/index.html content/index.md"
+  exec "nim md2html -o:site/news.html content/news.md"
   exec "nim md2html -o:site/faq.html content/faq.md"
 
   exec "nim c -r multipage.nim site/language.html"
