@@ -4,9 +4,10 @@ Release announcements and reports from the Nimony project. Newest first.
 
 ----
 
-Prebuilt toolchains for Linux x86_64/ARM64, macOS ARM64 and Windows x86_64 are
-on the [nightly releases](https://github.com/nim-lang/nimony-website/releases)
-page, or [build from source](install.html).
+A prebuilt toolchain is published every day for Linux x86_64/ARM64, macOS ARM64
+and Windows x86_64 — see [Download](download.html), browse
+[all nightly releases](https://github.com/nim-lang/nimony-website/releases), or
+[build from source](install.html).
 
 ----
 

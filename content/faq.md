@@ -44,6 +44,26 @@ The **Language:** Nimony explores Nim 3 designs before Nim offers them (see [dif
 
 ----
 
+## How do I get Nimony?
+
+A prebuilt toolchain is published **every day** for Linux x86_64/ARM64, macOS
+(Apple silicon) and Windows x86_64: see [Download](download.html). Unpack the
+archive, put its `bin/` on your `PATH`, and you are done — no Nim installation
+is needed to *use* Nimony, and with the native backend (`nimony n`) no C
+compiler either. To build the compiler yourself instead, follow
+[Installation](install.html).
+
+----
+
+## What else ships with the compiler?
+
+The archive contains the whole pipeline. Two of those programs you will use
+directly: **dagon** generates API documentation from checked NIF, and **pnak**
+resolves, pins and fetches a project's dependencies. The [Tools](tools.html)
+page introduces both.
+
+----
+
 ## Is Nimony a drop-in replacement for Nim 2?
 
 **No.** Once that happens it will be renamed to Nim 3. Currently it neither tries to compile all Nim 2 unchanged nor replicate every pragmatic shortcut overnight. It shines when you want the **NIF-centric toolchain** and early **Nim 3** semantics and can accept **gaps** documented under “present” in [differences.md](https://github.com/nim-lang/nimony/blob/master/doc/differences.md).
@@ -53,4 +73,6 @@ The **Language:** Nimony explores Nim 3 designs before Nim offers them (see [dif
 ## Where can I read more?
 
 - The [manual](language.html) on this site has a full language guide.
+- The [library index](stdlib/theindex.html) lists every module you can import.
+- [Tools](tools.html) covers `dagon` and `pnak` and the rest of the toolchain.
 - [differences.md](https://github.com/nim-lang/nimony/blob/master/doc/differences.md) for Nim 2 vs Nim 3 / Nimony trade-offs and open questions.

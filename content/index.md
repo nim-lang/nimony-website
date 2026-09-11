@@ -1,6 +1,38 @@
 # Nimony
 ## Efficient, expressive, elegant
 
+.. raw:: html
+
+   <div class="download-panel download-panel-hero">
+     <p class="download-kicker">Get the nightly toolchain</p>
+     <p class="download-version" data-nightly-version>Built every day from nimony&rsquo;s <code>master</code> branch.</p>
+     <div class="download-grid">
+       <a class="download-btn" data-nightly="linux_amd64" href="https://github.com/nim-lang/nimony-website/releases">
+         <span class="download-os">Linux</span>
+         <span class="download-arch">x86_64 &middot; tar.xz</span>
+       </a>
+       <a class="download-btn" data-nightly="linux_arm64" href="https://github.com/nim-lang/nimony-website/releases">
+         <span class="download-os">Linux</span>
+         <span class="download-arch">ARM64 &middot; tar.xz</span>
+       </a>
+       <a class="download-btn" data-nightly="macos_arm64" href="https://github.com/nim-lang/nimony-website/releases">
+         <span class="download-os">macOS</span>
+         <span class="download-arch">Apple silicon &middot; tar.xz</span>
+       </a>
+       <a class="download-btn" data-nightly="windows_amd64" href="https://github.com/nim-lang/nimony-website/releases">
+         <span class="download-os">Windows</span>
+         <span class="download-arch">x86_64 &middot; zip</span>
+       </a>
+     </div>
+     <p class="download-note">
+       Unpack, put <code>bin/</code> on your <code>PATH</code>, done &mdash; and with
+       <code>nimony n</code> you do not even need a C compiler.
+       <a href="download.html">Download page</a> &middot;
+       <a href="install.html">Build from source</a> &middot;
+       <a href="tools.html">Tools</a>
+     </p>
+   </div>
+
 **Nimony** is a new compiler for Nim, organised around [NIF](https://github.com/nim-lang/nifspec): an interchange format that every stage of the pipeline reads and writes. NIF is what makes plugins possible and it is also how we can offer **incremental** and **parallel** builds. The **Nim 3** language features (borrow checking, explicit nilability, sum types, checked generics, …) are built on top of it.
 
 With plugins you can go far beyond what a macro system can accomplish easily:
@@ -16,13 +48,9 @@ With plugins you can go far beyond what a macro system can accomplish easily:
 
 For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
-## Nightly builds
-
-Prebuilt toolchains are published every day.
-
-[→ Browse the nightly releases](https://github.com/nim-lang/nimony-website/releases) and grab the newest archive for your platform. We currently offer builds for Linux x86_64, Linux ARM64, macOS ARM64 and Windows x86_64.
-
-Extract the archive, add its `bin/` directory to your `PATH`, and make sure a C compiler (`gcc` or `clang`) is available. On Windows, run `hastur install` from the extracted directory to fetch the bundled MinGW+LLVM toolchain. Or [build from source](install.html).
+The compiler is not the whole story: `dagon` generates the API documentation
+from checked NIF, and `pnak` resolves and pins a project's dependencies — see
+[Tools](tools.html).
 
 Below are small **language** sketches Nimony emphasizes alongside that toolchain story.
 

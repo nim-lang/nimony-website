@@ -58,11 +58,12 @@ proc wrapDagonPage(path: string) =
         <nav>
             <div class="nav-controls">
                 <button class="nav-btn" onclick="navigateToPage('$2')">Home</button>
-                <button class="nav-btn" onclick="navigateToPage('$3')">News</button>
-                <button class="nav-btn" onclick="navigateToPage('$4')">Manual</button>
-                <button class="nav-btn" onclick="navigateToPage('$5')">Installation</button>
+                <button class="nav-btn nav-btn-cta" onclick="navigateToPage('$3')">Download</button>
+                <button class="nav-btn" onclick="navigateToPage('$4')">News</button>
+                <button class="nav-btn" onclick="navigateToPage('$5')">Manual</button>
                 <button class="nav-btn" onclick="navigateToPage('$6')">Library</button>
-                <button class="nav-btn" onclick="navigateToPage('$7')">FAQ</button>
+                <button class="nav-btn" onclick="navigateToPage('$7')">Tools</button>
+                <button class="nav-btn" onclick="navigateToPage('$8')">FAQ</button>
                 <button class="nav-btn theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
             </div>
             <div class="nav-hierarchy" id="navHierarchy">
@@ -74,7 +75,7 @@ proc wrapDagonPage(path: string) =
         </nav>
 
         <main>
-$8
+$9
         </main>
 
         <footer>
@@ -82,16 +83,17 @@ $8
         </footer>
     </div>
 
-    <script src="$9"></script>
+    <script src="$10"></script>
 </body>
 </html>
 """ % [
     siteHref(pfx, "style.css"),
     siteHref(pfx, "index.html"),
+    siteHref(pfx, "download.html"),
     siteHref(pfx, "news.html"),
     siteHref(pfx, "language.html"),
-    siteHref(pfx, "install.html"),
     siteHref(pfx, "stdlib/theindex.html"),
+    siteHref(pfx, "tools.html"),
     siteHref(pfx, "faq.html"),
     content,
     siteHref(pfx, "script.js")
@@ -212,7 +214,9 @@ proc main() =
   buildLocalConfiguredDoc(nimonyDir & "/doc/language.md", "language.html", man = true)
   buildLocalConfiguredDoc(nimonyDir & "/doc/install.md", "install.html")
   exec "nim md2html -o:site/index.html content/index.md"
+  exec "nim md2html -o:site/download.html content/download.md"
   exec "nim md2html -o:site/news.html content/news.md"
+  exec "nim md2html -o:site/tools.html content/tools.md"
   exec "nim md2html -o:site/faq.html content/faq.md"
 
   exec "nim c -r multipage.nim site/language.html"

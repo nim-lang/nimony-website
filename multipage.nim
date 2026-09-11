@@ -18,7 +18,9 @@ const
         <header class="nav-controls" style="font-size: smaller;">
             <button class="nav-btn" onclick="navigateToPage('language.html')">Single Page</button>
             <button class="nav-btn" onclick="navigateToPage('stdlib/theindex.html')">Library</button>
+            <button class="nav-btn" onclick="navigateToPage('tools.html')">Tools</button>
             <button class="nav-btn" onclick="navigateToPage('faq.html')">FAQ</button>
+            <button class="nav-btn nav-btn-cta" onclick="navigateToPage('download.html')">Download</button>
             <button class="nav-btn theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
             <h1>Nimony Manual</h1>
         </header>

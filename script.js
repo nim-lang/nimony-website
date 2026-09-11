@@ -319,6 +319,92 @@ function setupPageNavKeyboard() {
     });
 }
 
+// ---------------------------------------------------------------------------
+// Nightly download links.
+//
+// nightly.yml cuts ONE release per nimony commit, tagged
+// `nightly-<version>-<short sha>`, with four assets named
+// `nimony-<version>-<short>-<os>_<cpu>.<ext>`. There is deliberately no
+// rolling "latest" tag — a URL someone tested keeps pointing at the build they
+// tested — so the newest one has to be looked up. The `[data-nightly]` links
+// therefore ship pointing at the releases page and are upgraded in place to
+// direct asset URLs once the API answers. If the request fails, is rate
+// limited, or JavaScript is off, the panel keeps working: the fallback href is
+// the releases page, which is where the manual answer lives anyway.
+// ---------------------------------------------------------------------------
+const NIGHTLY_RELEASES_API =
+    'https://api.github.com/repos/nim-lang/nimony-website/releases?per_page=10';
+
+function nightlyAssetPlatform(name) {
+    // `nimony-0.6.2-abc123def-linux_amd64.tar.xz` -> `linux_amd64`
+    const match = name.match(/-((?:linux|macos|windows)_(?:amd64|arm64))\./);
+    return match ? match[1] : null;
+}
+
+function applyNightlyRelease(release) {
+    const assets = {};
+    (release.assets || []).forEach(function(asset) {
+        const platform = nightlyAssetPlatform(asset.name);
+        if (platform) assets[platform] = asset;
+    });
+
+    let linked = 0;
+    document.querySelectorAll('a[data-nightly]').forEach(function(link) {
+        const asset = assets[link.getAttribute('data-nightly')];
+        if (!asset) return;
+        link.href = asset.browser_download_url;
+        link.title = asset.name;
+        linked++;
+    });
+    if (linked === 0) return false;
+
+    // `nightly-0.6.2-abc123def` -> version and commit, without trusting the
+    // release title, which is free text.
+    const tag = (release.tag_name || '').match(/^nightly-([0-9.]+)-([0-9a-f]+)$/);
+    const published = release.published_at
+        ? new Date(release.published_at).toISOString().slice(0, 10)
+        : null;
+
+    document.querySelectorAll('[data-nightly-version]').forEach(function(el) {
+        if (!tag) return;
+        el.textContent = 'Nimony ' + tag[1] + ' — built from master @ ' +
+            tag[2] + (published ? ' on ' + published : '');
+    });
+    return true;
+}
+
+function loadNightlyLinks() {
+    if (!document.querySelector('a[data-nightly]')) return;
+
+    fetch(NIGHTLY_RELEASES_API, { headers: { Accept: 'application/vnd.github+json' } })
+        .then(function(response) {
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return response.json();
+        })
+        .then(function(releases) {
+            if (!Array.isArray(releases)) return;
+            // The API orders by creation, which is NOT the order the archives
+            // appear in: a run that created its release and then failed to
+            // upload sits at the top of the list with zero assets, and a
+            // re-run of an older commit creates nothing new. So: keep only
+            // nightly tags, sort by publication date, and take the newest one
+            // whose assets actually cover the platforms on this page.
+            releases
+                .filter(function(release) {
+                    return /^nightly-/.test(release.tag_name || '') &&
+                           (release.assets || []).length > 0;
+                })
+                .sort(function(a, b) {
+                    return Date.parse(b.published_at || b.created_at || 0) -
+                           Date.parse(a.published_at || a.created_at || 0);
+                })
+                .some(applyNightlyRelease);
+        })
+        .catch(function() {
+            // Keep the fallback links. Nothing to report to the reader.
+        });
+}
+
 // Load saved preferences and initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     // Saved preference, else whatever the OS asks for
@@ -339,6 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupIntersectionObserver();
     setupPageNavKeyboard();
     markCurrentPageNav();
+    loadNightlyLinks();
 
     // Update current section on scroll
     window.addEventListener('scroll', updateCurrentSection);
