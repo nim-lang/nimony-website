@@ -27,6 +27,94 @@ proc siteHref(prefix, page: string): string =
   else:
     prefix & "/" & page
 
+## ---------------------------------------------------------------------------
+## The site navigation, defined once.
+##
+## Four generators emit pages -- `nimdoc.cfg` (twice: the content template and
+## the `-d:man` manual template), `wrapDagonPage` below, and `multipage.nim` --
+## and each of them used to carry its own copy of the button list. Adding a
+## page meant editing four files, and nothing detected it when one of them was
+## missed: the stdlib docs or the paged manual would simply keep the old bar.
+##
+## So the generators emit a sentinel comment instead and `injectSiteNav` (run
+## last, over everything under `site/`) fills it in. Only this file knows which
+## pages exist, and only this file computes how deep a page sits under `site/`
+## -- that per-page prefix is what made the copies awkward to share in the
+## first place.
+##
+##   <!--SITE-NAV-->          the site bar
+##   <!--SITE-NAV:manual-->   the site bar behind the manual's own controls
+##
+## The sentinel's own indentation is reused for the generated buttons, so the
+## emitted HTML stays readable.
+## ---------------------------------------------------------------------------
+
+const
+  NavSentinel = "<!--SITE-NAV"
+  SiteNav = [
+    (label: "Home", page: "index.html", cta: false),
+    (label: "Download", page: "download.html", cta: true),
+    (label: "News", page: "news.html", cta: false),
+    (label: "Manual", page: "language.html", cta: false),
+    (label: "Library", page: "stdlib/theindex.html", cta: false),
+    (label: "Tools", page: "tools.html", cta: false),
+    (label: "FAQ", page: "faq.html", cta: false)
+  ]
+
+type
+  NavKind = enum
+    navPlain,   ## every page but the single-page manual
+    navManual   ## adds the manual's own controls in front of the site bar
+
+proc navButton(indent, class, onclick, label: string): string =
+  indent & "<button class=\"" & class & "\" onclick=\"" & onclick & "\">" &
+    label & "</button>"
+
+proc navPageButton(indent, prefix, page, label: string; cta: bool): string =
+  navButton(indent,
+            (if cta: "nav-btn nav-btn-cta" else: "nav-btn"),
+            "navigateToPage('" & siteHref(prefix, page) & "')",
+            label)
+
+proc navControls(prefix: string; kind: NavKind; indent: string): string =
+  var buttons: seq[string] = @[]
+  if kind == navManual:
+    # Manual-only controls: they act on the page itself instead of navigating
+    # the site, which is why they lead and are not part of `SiteNav`.
+    buttons.add navButton(indent, "nav-btn", "toggleNavigation()", "Navigation")
+    buttons.add navPageButton(indent, prefix, "page1.html", "Paged view", false)
+    # No `Language` chip: it scrolled to `#language-guide`, the manual's own
+    # first heading, which `Navigation` already lists and the `Manual` chip
+    # already points at. With it the bar wrapped to a second row inside the
+    # 1120px container, leaving the theme switcher alone on a line of its own.
+  for item in SiteNav:
+    buttons.add navPageButton(indent, prefix, item.page, item.label, item.cta)
+  buttons.add navButton(indent, "nav-btn theme-switcher", "toggleTheme()",
+                        "\u{1F319} Dark")
+  result = buttons.join("\n")
+
+proc injectNav(path: string) =
+  let html = readFile(path)
+  if not html.contains(NavSentinel): return
+
+  let prefix = relToSiteRoot(path)
+  var res = newStringOfCap(html.len + 2048)
+  for line in html.splitLines:
+    let pos = line.find(NavSentinel)
+    if pos < 0:
+      res.add line
+    else:
+      let kind = if line.contains(NavSentinel & ":manual"): navManual
+                 else: navPlain
+      res.add navControls(prefix, kind, line[0 ..< pos])
+    res.add "\n"
+  writeFile(path, res)
+
+proc injectSiteNav() =
+  for path in walkDirRec("site"):
+    if path.endsWith(".html"):
+      injectNav(path)
+
 proc extractBody(html: string): string =
   let bodyStart = html.find("<body>")
   let bodyEnd = html.find("</body>")
@@ -57,14 +145,7 @@ proc wrapDagonPage(path: string) =
 
         <nav>
             <div class="nav-controls">
-                <button class="nav-btn" onclick="navigateToPage('$2')">Home</button>
-                <button class="nav-btn nav-btn-cta" onclick="navigateToPage('$3')">Download</button>
-                <button class="nav-btn" onclick="navigateToPage('$4')">News</button>
-                <button class="nav-btn" onclick="navigateToPage('$5')">Manual</button>
-                <button class="nav-btn" onclick="navigateToPage('$6')">Library</button>
-                <button class="nav-btn" onclick="navigateToPage('$7')">Tools</button>
-                <button class="nav-btn" onclick="navigateToPage('$8')">FAQ</button>
-                <button class="nav-btn theme-switcher" onclick="toggleTheme()">🌙 Dark</button>
+                <!--SITE-NAV-->
             </div>
             <div class="nav-hierarchy" id="navHierarchy">
                 <div class="nav-section">
@@ -75,7 +156,7 @@ proc wrapDagonPage(path: string) =
         </nav>
 
         <main>
-$9
+$2
         </main>
 
         <footer>
@@ -83,18 +164,11 @@ $9
         </footer>
     </div>
 
-    <script src="$10"></script>
+    <script src="$3"></script>
 </body>
 </html>
 """ % [
     siteHref(pfx, "style.css"),
-    siteHref(pfx, "index.html"),
-    siteHref(pfx, "download.html"),
-    siteHref(pfx, "news.html"),
-    siteHref(pfx, "language.html"),
-    siteHref(pfx, "stdlib/theindex.html"),
-    siteHref(pfx, "tools.html"),
-    siteHref(pfx, "faq.html"),
     content,
     siteHref(pfx, "script.js")
   ]
@@ -220,5 +294,8 @@ proc main() =
   exec "nim md2html -o:site/faq.html content/faq.md"
 
   exec "nim c -r multipage.nim site/language.html"
+  # Last: every generator above emits `<!--SITE-NAV-->`, and this is what
+  # turns those into the actual bar -- multipage.nim's output included.
+  injectSiteNav()
 
 main()
