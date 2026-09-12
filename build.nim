@@ -28,19 +28,11 @@ proc siteHref(prefix, page: string): string =
     prefix & "/" & page
 
 ## ---------------------------------------------------------------------------
-## The site navigation, defined once.
+## The site navigation.
 ##
 ## Four generators emit pages -- `nimdoc.cfg` (twice: the content template and
-## the `-d:man` manual template), `wrapDagonPage` below, and `multipage.nim` --
-## and each of them used to carry its own copy of the button list. Adding a
-## page meant editing four files, and nothing detected it when one of them was
-## missed: the stdlib docs or the paged manual would simply keep the old bar.
-##
-## So the generators emit a sentinel comment instead and `injectSiteNav` (run
-## last, over everything under `site/`) fills it in. Only this file knows which
-## pages exist, and only this file computes how deep a page sits under `site/`
-## -- that per-page prefix is what made the copies awkward to share in the
-## first place.
+## the `-d:man` manual template), `wrapDagonPage` below, and `multipage.nim`. The generators emit a sentinel comment and `injectSiteNav` (run
+## last, over everything under `site/`) fills it in.
 ##
 ##   <!--SITE-NAV-->          the site bar
 ##   <!--SITE-NAV:manual-->   the site bar behind the manual's own controls
