@@ -3,8 +3,7 @@
 Nimony ships as a **prebuilt toolchain**, rebuilt every day from the latest
 `master` of [nim-lang/nimony](https://github.com/nim-lang/nimony). Unpack it,
 put `bin/` on your `PATH`, and you have the compiler, the standard library and
-every [tool](tools.html) in one directory. No bootstrap, no Nim installation,
-and — with the native backend — not even a C compiler.
+every [tool](tools.html) in one directory. With the native backend no other tools (C compiler, assembler, linker) are required.
 
 .. raw:: html
 
