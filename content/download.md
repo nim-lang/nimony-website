@@ -48,13 +48,10 @@ nimony --version
 
 Windows: unzip the archive and add the extracted `nimony\bin` to your `PATH`.
 
-That is the whole setup. **No C compiler is required**: the archive ships the
+The archive ships a
 native backend, and `nimony n` goes from your source to a finished executable
-using nothing but the tools in `bin/` — no C compiler, no assembler, no system
-linker. `arkham` generates machine code and `nifasm` writes the ELF, Mach-O or
-PE image itself. This works on every platform we publish, and it is the path we
-recommend on **Windows**, where "install a C toolchain first" is otherwise the
-most tedious step by far.
+using nothing but the tools in `bin/`. `arkham` generates machine code and `nifasm` writes the ELF, Mach-O or
+PE image itself. This works on every platform we publish, and it is particularly useful on Window which does not ship with a C compiler.
 
 The C backend (`nimony c`) is still the default and does need a C compiler on
 the `PATH` — `gcc` or `clang` on Unix. On Windows, run

@@ -48,9 +48,6 @@ With plugins you can go far beyond what a macro system can accomplish easily:
 
 For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
 
-The compiler is not the whole story: `dagon` generates the API documentation
-from checked NIF, and `pnak` resolves and pins a project's dependencies — see
-[Tools](tools.html).
 
 Below are small **language** sketches Nimony emphasizes alongside that toolchain story.
 

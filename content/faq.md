@@ -59,8 +59,7 @@ compiler either. To build the compiler yourself instead, follow
 
 The archive contains the whole pipeline. Two of those programs you will use
 directly: **dagon** generates API documentation from checked NIF, and **pnak**
-resolves, pins and fetches a project's dependencies. The [Tools](tools.html)
-page introduces both.
+resolves, pins and fetches a project's dependencies. See the [tools](tools.html) page for more information.
 
 ----
 

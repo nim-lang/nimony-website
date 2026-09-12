@@ -91,7 +91,7 @@ pnak search json    # find packages by name
 
 ### How versions are resolved
 
-Depth decides. The requirement closest to your project wins:
+The "dependency depth" decides. The requirement closest to your project wins:
 
 ```
 YourApp (depth 0)
@@ -103,8 +103,8 @@ YourApp (depth 0)
 ```
 
 `C@abc123` is used, because `A`'s demand sits closer to `YourApp` than `D`'s.
-It is a plain breadth-first traversal — the same algorithm for a first checkout
-and for an update, with no solver and no surprises.
+It is a plain breadth-first traversal, the same deterministic algorithm for a first checkout
+and for an update is used. Pnak uses no solver algorithm, but you can use an offline solver that rewrites your `.nimble` file to encode a solution based on semver if you like.
 
 A `requires` line may name a git URL or a bare package name; bare names are
 resolved through Nim's official `packages.json` (cached locally, `alias`
@@ -140,7 +140,7 @@ and `--nimony` to restrict `search` to packages tagged for Nimony / Nim 3.
 
 ## The rest of the toolchain
 
-These sit inside the pipeline; `nimony` shells out to them for you.
+`nimony` calls these tools for you automatically. You do not have to know about them.
 
 | Tool | Role |
 | ---- | ---- |
