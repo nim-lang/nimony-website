@@ -263,6 +263,10 @@ proc main() =
     discard "fine"
   createDir "site"
   buildArticles()
+  # The custom domain: GitHub Pages serves whatever CNAME the deployed artifact
+  # carries, and `site/` is wiped above on every build, so it has to be written
+  # here. It must match the domain configured in Settings -> Pages.
+  writeFile "site/CNAME", "nimony.org\n"
   copyFile "style.css", "site/style.css"
   copyFile "script.js", "site/script.js"
   # The header band in style.css references this by a URL relative to the
