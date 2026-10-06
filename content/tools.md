@@ -147,7 +147,7 @@ and `--nimony` to restrict `search` to packages tagged for Nimony / Nim 3.
 | `nimony` | the driver: parses the command line, runs the pipeline, builds the project |
 | `nifler` | maps Nim source to NIF, using Nim's own parser |
 | `nimsem` | semantic checking: the pass that produces the `.sc.nif` files dagon reads |
-| `hexer` | lowering and optimization, including the ARC-specific optimizer |
+| `shoggoth` | lowering and optimization (formerly `hexer`), including the ARC-specific optimizer |
 | `lengc` | the Leng compiler — NIF to C |
 | `niflink` | the link driver: compiles generated C and links the final binary |
 | `nifmake` | a make-like engine over a NIF dependency graph; this is what makes builds parallel and incremental |
