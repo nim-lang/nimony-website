@@ -34,7 +34,7 @@ jobs:
       - name: Make gcc-14 the default C compiler
         run: |
           # Generating the stdlib docs is a full nimony compile — `tall.nim`
-          # reaches a macro plugin, which nimony builds through hexer and cc —
+          # reaches a macro plugin, which nimony builds through shoggoth and cc —
           # so the C compiler is part of this build, not just Nim. gcc-14 is
           # what nimony's own CI and this repo's nightly.yml test with; the
           # 24.04 image defaults to gcc-13, which nothing validates. Both are

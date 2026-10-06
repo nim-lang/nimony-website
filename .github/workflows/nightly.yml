@@ -155,7 +155,7 @@ jobs:
           Add-MpPreference -ExclusionPath "${{ github.workspace }}" -ErrorAction SilentlyContinue
           Add-MpPreference -ExclusionPath "$env:USERPROFILE\nimcache" -ErrorAction SilentlyContinue
           Add-MpPreference -ExclusionPath "$env:TEMP" -ErrorAction SilentlyContinue
-          foreach ($p in @('nim.exe','nimony.exe','nimsem.exe','hexer.exe','lengc.exe','nifler.exe','nifmake.exe','gcc.exe','g++.exe','ld.exe','as.exe','ar.exe','make.exe')) {
+          foreach ($p in @('nim.exe','nimony.exe','nimsem.exe','shoggoth.exe','lengc.exe','nifler.exe','nifmake.exe','gcc.exe','g++.exe','ld.exe','as.exe','ar.exe','make.exe')) {
             Add-MpPreference -ExclusionProcess $p -ErrorAction SilentlyContinue
           }
 
@@ -291,7 +291,7 @@ jobs:
         run: |
           set -euo pipefail
           # Layout the compiler expects, relative to the parent of bin/:
-          #   bin/            built tools (nimony, nimsem, hexer, nifler, nifmake, ...)
+          #   bin/            built tools (nimony, nimsem, shoggoth, nifler, nifmake, ...)
           #   lib/            stdlib (found via getAppDir().parentDir()/lib)
           #   src/lib/        NIF libraries used by macros/plugins (semos/macro_plugin)
           #   vendor/mimalloc mimalloc's static.c is {.compile.}d into every user program

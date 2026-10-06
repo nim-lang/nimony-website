@@ -213,16 +213,17 @@ proc toolExePath(nimonyDir, tool: string): string =
 ## Every binary the doc build ends up shelling out to. Generating the stdlib
 ## docs is a FULL compile, not just a parse: `tall.nim` pulls in stdlib modules
 ## that use a macro plugin, so nimony compiles `lib/std/deps/smartcli.nim`
-## through the entire C pipeline (nifler -> nimsem -> hexer -> cc -> niflink)
+## through the entire C pipeline (nifler -> nimsem -> shoggoth -> cc -> niflink)
 ## before it can sem the modules being documented.
 ##
 ## A missing tool is not reported as a missing tool: `findTool` (src/lib/
 ## tooldirs.nim) falls back to the bare name, so the generated build file gets
-## `hexer` instead of `<nimony>/bin/hexer` and the build dies deep inside
-## nifmake with `/bin/sh: 1: hexer: not found`. That is exactly what broke CI
+## `shoggoth` instead of `<nimony>/bin/shoggoth` and the build dies deep inside
+## nifmake with `/bin/sh: 1: shoggoth: not found`. That is exactly what broke CI
 ## while this list was maintained by hand here and drifted behind the
-## compiler's pipeline.
-const docTools = ["nifler", "nimsem", "nimony", "hexer", "lengc", "niflink",
+## compiler's pipeline. (hexer is no longer a separate binary: nim-lang/nimony
+## #2620 merged it into shoggoth, so listing it here would fail every build.)
+const docTools = ["nifler", "nimsem", "nimony", "lengc", "niflink",
                   "nifmake", "shoggoth", "validator", "dagon"]
 
 proc ensureNimonyDocTools(nimonyDir: string): string =
