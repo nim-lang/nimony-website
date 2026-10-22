@@ -35,6 +35,44 @@
 
 **Nimony** is a new compiler for Nim, organised around [NIF](https://github.com/nim-lang/nifspec): an interchange format that every stage of the pipeline reads and writes. NIF is what makes plugins possible and it is also how we can offer **incremental** and **parallel** builds. The **Nim 3** language features (borrow checking, explicit nilability, sum types, checked generics, …) are built on top of it.
 
+.. raw:: html
+
+   <div class="spice-panel" data-tabs>
+     <p class="spice-kicker">Nimony for&hellip;</p>
+     <div class="spice-tabs" role="tablist" aria-label="Nimony for" hidden>
+       <button class="spice-tab" role="tab" id="spice-tab-embedded" aria-controls="spice-embedded" aria-selected="true">Embedded</button>
+       <button class="spice-tab" role="tab" id="spice-tab-games" aria-controls="spice-games" aria-selected="false" tabindex="-1">Games</button>
+       <button class="spice-tab" role="tab" id="spice-tab-ai" aria-controls="spice-ai" aria-selected="false" tabindex="-1">AI assisted</button>
+     </div>
+     <section class="spice-pane" role="tabpanel" id="spice-embedded" aria-labelledby="spice-tab-embedded">
+       <p class="spice-title">Embedded development</p>
+       <ul>
+         <li><strong>Native code generation</strong> for x86_64, ARM64, ARM32, AVR and RISC-V &mdash; independent of LLVM and GCC, so there are fewer surprises from the implicit assumptions about C&rsquo;s undefined behavior that plague these toolchains.</li>
+         <li>A runtime <strong>hardened against heap exhaustion</strong>: running out of memory is a condition you handle, not a crash.</li>
+         <li>A <strong>structured, typesafe inline assembler</strong> that uses Nim&rsquo;s own syntax.</li>
+         <li><strong>Memory safe</strong> thanks to optimized automatic reference counting and a variant of borrow checking that is easy to understand.</li>
+       </ul>
+     </section>
+     <section class="spice-pane" role="tabpanel" id="spice-games" aria-labelledby="spice-tab-games">
+       <p class="spice-title">Game development</p>
+       <ul>
+         <li><strong>Standalone binaries</strong> optimized for your target architecture.</li>
+         <li><code>.passive</code> procs turn <strong>linear code into state machines</strong> &mdash; ideal for splitting game logic across frames.</li>
+         <li><strong>Mutable state</strong> is well supported, not an afterthought.</li>
+       </ul>
+     </section>
+     <section class="spice-pane" role="tabpanel" id="spice-ai" aria-labelledby="spice-tab-ai">
+       <p class="spice-title">AI assisted development</p>
+       <ul>
+         <li><strong>A single language for the full stack.</strong> No matter how low level or high level your tasks are: get familiar with Nimony and end up with readable, maintainable code. The same code base compiles to C, to native code, to JavaScript and to WebAssembly &mdash; from microcontrollers to the browser.</li>
+         <li><strong>The compiler as a reviewer.</strong> Generics are type checked where they are <em>defined</em>, sum types are matched exhaustively, and the borrow checker rejects mutation under active borrows. Whole classes of plausible-looking mistakes become compile errors, pointing at the line that caused them.</li>
+         <li><strong>Intent you can read.</strong> <code>requires</code> and <code>ensures</code> contracts state what a routine expects and promises right in its signature. Calls that provably violate them are rejected at compile time, so you review the contract rather than re-deriving it from the body.</li>
+         <li><strong>Short feedback loops.</strong> Incremental and parallel builds keep the edit&ndash;compile&ndash;fix cycle fast, whether you or your assistant is the one iterating.</li>
+         <li><strong>Little ceremony.</strong> Nim&rsquo;s concise, indentation-based syntax means less code to generate and less code to review.</li>
+       </ul>
+     </section>
+   </div>
+
 With plugins you can go far beyond what a macro system can accomplish easily:
 
 - **Custom validators**

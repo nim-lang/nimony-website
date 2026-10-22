@@ -405,6 +405,56 @@ function loadNightlyLinks() {
         });
 }
 
+// ---------------------------------------------------------------------------
+// Tab panels (`[data-tabs]`, the "Nimony for…" box on the home page).
+//
+// The markup ships with every pane visible and the tab bar `hidden`, so the
+// content reads as a plain list without JavaScript. Here the bar is revealed
+// and all panes but the selected one are hidden. Keyboard handling follows the
+// WAI-ARIA tabs pattern: only the selected tab is in the tab order, the arrow
+// keys and Home/End move between tabs and select as they go.
+// ---------------------------------------------------------------------------
+function setupTabs() {
+    document.querySelectorAll('[data-tabs]').forEach(function(panel) {
+        const tablist = panel.querySelector('[role="tablist"]');
+        if (!tablist) return;
+        const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+        if (tabs.length === 0) return;
+
+        function select(tab, focus) {
+            tabs.forEach(function(t) {
+                const selected = t === tab;
+                t.setAttribute('aria-selected', selected ? 'true' : 'false');
+                t.tabIndex = selected ? 0 : -1;
+                const pane = document.getElementById(t.getAttribute('aria-controls'));
+                if (pane) pane.hidden = !selected;
+            });
+            if (focus) tab.focus();
+        }
+
+        tabs.forEach(function(tab, i) {
+            tab.addEventListener('click', function() { select(tab, false); });
+            tab.addEventListener('keydown', function(event) {
+                let next = null;
+                if (event.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+                else if (event.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+                else if (event.key === 'Home') next = tabs[0];
+                else if (event.key === 'End') next = tabs[tabs.length - 1];
+                if (!next) return;
+                event.preventDefault();
+                select(next, true);
+            });
+        });
+
+        const initial = tabs.find(function(t) {
+            return t.getAttribute('aria-selected') === 'true';
+        }) || tabs[0];
+        select(initial, false);
+        tablist.hidden = false;
+        panel.classList.add('spice-ready');
+    });
+}
+
 // Load saved preferences and initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     // Saved preference, else whatever the OS asks for
@@ -426,6 +476,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupPageNavKeyboard();
     markCurrentPageNav();
     loadNightlyLinks();
+    setupTabs();
 
     // Update current section on scroll
     window.addEventListener('scroll', updateCurrentSection);
