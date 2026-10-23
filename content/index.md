@@ -33,7 +33,7 @@
      </p>
    </div>
 
-**Nimony** is a new compiler for Nim, organised around [NIF](https://github.com/nim-lang/nifspec): an interchange format that every stage of the pipeline reads and writes. NIF is what makes plugins possible and it is also how we can offer **incremental** and **parallel** builds. The **Nim 3** language features (borrow checking, explicit nilability, sum types, checked generics, …) are built on top of it.
+**Nimony** is a new compiler for Nim and the home of the **Nim 3** language: borrow checking, explicit nilability, sum types, checked generics and more, with **incremental** and **parallel** builds from the start. For how it relates to Nim 2, see the [FAQ](faq.html).
 
 .. raw:: html
 
@@ -42,7 +42,8 @@
      <div class="spice-tabs" role="tablist" aria-label="Nimony for" hidden>
        <button class="spice-tab" role="tab" id="spice-tab-embedded" aria-controls="spice-embedded" aria-selected="true">Embedded</button>
        <button class="spice-tab" role="tab" id="spice-tab-games" aria-controls="spice-games" aria-selected="false" tabindex="-1">Games</button>
-       <button class="spice-tab" role="tab" id="spice-tab-ai" aria-controls="spice-ai" aria-selected="false" tabindex="-1">AI assisted</button>
+       <button class="spice-tab" role="tab" id="spice-tab-fullstack" aria-controls="spice-fullstack" aria-selected="false" tabindex="-1">Full stack</button>
+       <button class="spice-tab" role="tab" id="spice-tab-compiler" aria-controls="spice-compiler" aria-selected="false" tabindex="-1">Compiler devs</button>
      </div>
      <section class="spice-pane" role="tabpanel" id="spice-embedded" aria-labelledby="spice-tab-embedded">
        <p class="spice-title">Embedded development</p>
@@ -51,6 +52,7 @@
          <li>A runtime <strong>hardened against heap exhaustion</strong>: running out of memory is a condition you handle, not a crash.</li>
          <li>A <strong>structured, typesafe inline assembler</strong> that uses Nim&rsquo;s own syntax.</li>
          <li><strong>Memory safe</strong> thanks to optimized automatic reference counting and a variant of borrow checking that is easy to understand.</li>
+         <li><strong>Provable absence of out-of-bounds indexing.</strong> Indexing into arrays, <code>seq</code>s and <code>string</code>s is a <code>requires</code> contract checked at the call site: an index that is provably out of range is a compile-time error, and a module with <code>{.feature: "staticContracts".}</code> must prove <em>every</em> access in bounds &mdash; no buffer overruns and no run-time checks left in the binary. Your own routines state their preconditions the same way.</li>
        </ul>
      </section>
      <section class="spice-pane" role="tabpanel" id="spice-games" aria-labelledby="spice-tab-games">
@@ -59,35 +61,34 @@
          <li><strong>Standalone binaries</strong> optimized for your target architecture.</li>
          <li><code>.passive</code> procs turn <strong>linear code into state machines</strong> &mdash; ideal for splitting game logic across frames.</li>
          <li><strong>Mutable state</strong> is well supported, not an afterthought.</li>
+         <li><strong>Short feedback loops.</strong> Incremental and parallel builds keep the edit&ndash;compile&ndash;fix cycle fast.</li>
        </ul>
      </section>
-     <section class="spice-pane" role="tabpanel" id="spice-ai" aria-labelledby="spice-tab-ai">
-       <p class="spice-title">AI assisted development</p>
+     <section class="spice-pane" role="tabpanel" id="spice-fullstack" aria-labelledby="spice-tab-fullstack">
+       <p class="spice-title">Full stack development</p>
        <ul>
          <li><strong>A single language for the full stack.</strong> No matter how low level or high level your tasks are: get familiar with Nimony and end up with readable, maintainable code. The same code base compiles to C, to native code, to JavaScript and to WebAssembly &mdash; from microcontrollers to the browser.</li>
+         <li><strong>Batteries included.</strong> The standard library ships what applications need: linear-time regular expressions, sockets with a TLS&nbsp;1.3 client written in Nim, an HTTP client and server, JSON and a math library.</li>
          <li><strong>The compiler as a reviewer.</strong> Generics are type checked where they are <em>defined</em>, sum types are matched exhaustively, and the borrow checker rejects mutation under active borrows. Whole classes of plausible-looking mistakes become compile errors, pointing at the line that caused them.</li>
-         <li><strong>Intent you can read.</strong> <code>requires</code> and <code>ensures</code> contracts state what a routine expects and promises right in its signature. Calls that provably violate them are rejected at compile time, so you review the contract rather than re-deriving it from the body.</li>
-         <li><strong>Short feedback loops.</strong> Incremental and parallel builds keep the edit&ndash;compile&ndash;fix cycle fast, whether you or your assistant is the one iterating.</li>
-         <li><strong>Little ceremony.</strong> Nim&rsquo;s concise, indentation-based syntax means less code to generate and less code to review.</li>
+         <li><strong>Little ceremony.</strong> Nim&rsquo;s concise, indentation-based syntax means less code to write and less code to review.</li>
+       </ul>
+     </section>
+     <section class="spice-pane" role="tabpanel" id="spice-compiler" aria-labelledby="spice-tab-compiler">
+       <p class="spice-title">Compiler and tool developers</p>
+       <ul>
+         <li><strong>Built around <a href="https://github.com/nim-lang/nifspec">NIF</a></strong>, an interchange format that every stage of the pipeline reads and writes. You can inspect, diff and transform the output of any stage &mdash; and it is what makes incremental and parallel builds possible.</li>
+         <li><strong>Plugins</strong> go far beyond what a macro system can accomplish easily:
+           <ul>
+             <li><strong>Custom validators</strong> that look for possible <strong>deadlocks</strong>, <strong>race conditions</strong> or risky <strong>recursion</strong> (embedded targets often have very small stacks).</li>
+             <li><strong>Custom code generators</strong> that compile a <strong>subset of Nim to GPUs</strong> or target <strong>FPGAs</strong>.</li>
+             <li><strong>Custom DSLs</strong>, supported more cleanly than in Nim today &mdash; for example <strong>lexer</strong> and <strong>parser generators</strong>.</li>
+           </ul>
+         </li>
        </ul>
      </section>
    </div>
 
-With plugins you can go far beyond what a macro system can accomplish easily:
-
-- **Custom validators**
-  - look for possible **deadlocks**
-  - look for **race conditions**
-  - look for risky **recursion** (embedded targets often have **very small stacks**)
-- **Custom code generators**
-  - compile a **subset of Nim to GPUs**
-  - compile toward **FPGAs**
-- **Custom DSLs**, supported more cleanly than in Nim today — for example **lexer** and **parser generators**
-
-For how Nimony relates to **Nim 3** and **Nim 2**, see the [FAQ](faq.html).
-
-
-Below are small **language** sketches Nimony emphasizes alongside that toolchain story.
+Here is a taste of the language.
 
 ----
 

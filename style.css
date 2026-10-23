@@ -2054,6 +2054,10 @@ ul.index .sum {
     margin-bottom: 6px;
 }
 
+.spice-pane li ul {
+    margin-top: 6px;
+}
+
 .spice-ready .spice-title {
     display: none;
 }
