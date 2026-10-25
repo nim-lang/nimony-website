@@ -294,12 +294,20 @@ jobs:
           #   bin/            built tools (nimony, nimsem, shoggoth, nifler, nifmake, ...)
           #   lib/            stdlib (found via getAppDir().parentDir()/lib)
           #   src/lib/        NIF libraries used by macros/plugins (semos/macro_plugin)
+          #   src/nimony/lib/, src/nimony/nif_annotations.nim, src/models/, src/nifler2/
+          #                   sources user plugins compile against (`import plugins`)
+          #   doc/tags.md     read by bin/validator when checking plugin output
           #   vendor/mimalloc mimalloc's static.c is {.compile.}d into every user program
           stage="staging/nimony"
-          mkdir -p "$stage/src" "$stage/vendor"
+          mkdir -p "$stage/src/nimony" "$stage/vendor" "$stage/doc"
           cp -r nimony/bin            "$stage/bin"
           cp -r nimony/lib            "$stage/lib"
           cp -r nimony/src/lib        "$stage/src/lib"
+          cp -r nimony/src/nimony/lib "$stage/src/nimony/lib"
+          cp nimony/src/nimony/nif_annotations.nim "$stage/src/nimony/"
+          cp -r nimony/src/models     "$stage/src/models"
+          cp -r nimony/src/nifler2    "$stage/src/nifler2"
+          cp nimony/doc/tags.md       "$stage/doc/"
           cp -r nimony/vendor/mimalloc "$stage/vendor/mimalloc"
           cp nimony/README.md nimony/license.txt "$stage/" 2>/dev/null || true
 
@@ -325,6 +333,36 @@ jobs:
           ext=""
           if [ "${{ runner.os }}" = "Windows" ]; then ext=".exe"; fi
           "staging/nimony/bin/nimony$ext" c -r hello.nim
+
+          # Build the plugin Quick start from doc/plugins.md, so a plugin source
+          # missing from the staged tree fails here instead of on users' machines.
+          nimonybin="$PWD/staging/nimony/bin/nimony$ext"
+          mkdir -p plugintest/deps
+          cat > plugintest/mymodule.nim <<'EOF'
+          import std / syncio
+
+          template generateEcho(s: string) {.plugin: "deps/mplugin1".}
+
+          generateEcho("Hello, world!")
+          EOF
+          cat > plugintest/deps/mplugin1.nim <<'EOF'
+          import plugins
+
+          proc transform(n: NifCursor): NifBuilder =
+            result = createTree()
+            let info = n.info
+            var arg = callArgs(n)
+            result.withTree StmtsS, info:
+              result.withTree CallS, info:
+                result.addIdent "echo"
+                result.takeTree arg
+
+          var inp = loadPluginInput()
+          saveTree transform(inp)
+          EOF
+          out=$(cd plugintest && "$nimonybin" c -r mymodule.nim)
+          echo "$out"
+          echo "$out" | tr -d '\r' | grep -qx 'Hello, world!' || { echo "plugin smoke test failed" >&2; exit 1; }
 
           # `hastur build all` SKIPS arkham + nifasm (with a message, exit 0) when
           # the sibling nativenif checkout is missing, so a green build is not by
