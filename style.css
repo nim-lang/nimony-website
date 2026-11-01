@@ -1956,3 +1956,134 @@ ul.index .sum {
 .card-text code {
     font-size: 0.86em;
 }
+
+/* ---------------------------------------------------------------------------
+   "Nimony for…" tabs on the home page.
+
+   Without JavaScript the tab bar stays `hidden` and every pane is shown, one
+   after another, each under its own title. script.js reveals the bar, marks
+   the panel `.spice-ready` and from then on only the selected pane shows; the
+   titles are dropped because the selected tab already says the same thing.
+   The titles are <p>, not headings, so they stay out of the section list.
+   --------------------------------------------------------------------------- */
+.spice-panel {
+    position: relative;
+    overflow: hidden;
+    background-color: color-mix(in srgb, var(--accent-soft) 8%, var(--bg-secondary));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px 22px 8px;
+    margin: 26px 0 30px;
+    box-shadow: var(--shadow-md);
+}
+
+.spice-panel::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    background: var(--rule);
+}
+
+.spice-kicker {
+    color: var(--accent-color);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.spice-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 14px;
+}
+
+.spice-tabs[hidden] {
+    display: none;
+}
+
+.spice-tab {
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 650;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    padding: 8px 14px 9px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.spice-tab:hover {
+    color: var(--text-primary);
+    border-bottom-color: color-mix(in srgb, var(--accent-soft) 45%, transparent);
+}
+
+.spice-tab[aria-selected="true"] {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+
+.spice-tab:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: -2px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.spice-title {
+    color: var(--accent-2);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 6px 0 4px;
+}
+
+.spice-pane ul {
+    margin-top: 0;
+}
+
+.spice-pane li {
+    line-height: 1.6;
+    margin-bottom: 6px;
+}
+
+.spice-pane li ul {
+    margin-top: 6px;
+}
+
+.spice-ready .spice-title {
+    display: none;
+}
+
+.spice-ready .spice-pane[hidden] {
+    display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .spice-ready .spice-pane {
+        animation: spice-fade 0.2s ease-out;
+    }
+}
+
+@keyframes spice-fade {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 600px) {
+    .spice-panel {
+        padding: 16px 16px 6px;
+    }
+
+    .spice-tab {
+        padding: 8px 10px 9px;
+        font-size: 0.9rem;
+    }
+}
