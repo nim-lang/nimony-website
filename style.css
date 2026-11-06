@@ -411,14 +411,12 @@ h1 {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
-/* Small-caps tagline reads as a mark rather than a sentence. */
+/* The tagline is set as a plain sentence, not tracked-out capitals. */
 .subtitle {
     color: var(--text-muted);
-    font-size: 0.8rem;
-    font-style: normal;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 500;
 }
 
 /* Inside the band the tagline sits on the photograph, so it cannot use the
@@ -1802,11 +1800,9 @@ ul.index .sum {
 }
 
 .download-kicker {
-    color: var(--accent-color);
-    font-size: 0.78rem;
+    color: var(--text-primary);
+    font-size: 1.1rem;
     font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
     margin-bottom: 4px;
 }
 
@@ -1988,11 +1984,9 @@ ul.index .sum {
 }
 
 .spice-kicker {
-    color: var(--accent-color);
-    font-size: 0.78rem;
+    color: var(--text-primary);
+    font-size: 1.1rem;
     font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
     margin-bottom: 12px;
 }
 
