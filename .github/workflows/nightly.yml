@@ -378,6 +378,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # The smoke test ran the staged compiler, which fills the toolchain's
+          # stdlib cache at `<toolchain>/stdcache/` (`deps.stdCacheDir`). Its
+          # entries record absolute dependency paths of THIS runner
+          # (/home/runner/work/..., D:\a\...), so shipping it breaks every
+          # user's first build with `file not found` (nim-lang/nimony#2936).
+          # Users' compilers rebuild it on first use.
+          rm -rf staging/nimony/stdcache
+          if [ -e staging/nimony/stdcache ]; then
+            echo "could not remove staging/nimony/stdcache" >&2
+            exit 1
+          fi
           mkdir -p out
           if [ "${{ matrix.ext }}" = "zip" ]; then
             ( cd staging && 7z a -tzip -mx=9 "${{ github.workspace }}/out/$ASSET" nimony >/dev/null )
