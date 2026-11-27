@@ -12,7 +12,7 @@ Counted over nimony and its native backend [nativenif](https://github.com/nim-la
 tests excluded.
 
 | | nimony | nativenif | total |
-|---|---:|---:|---:|
+| --- | --- | --- | --- |
 | Commits since v0.6.2 | 568 | 55 | 623 |
 | Lines added | 85,000 | 22,158 | 107,158 |
 | Lines removed | 18,946 | 10,239 | 29,185 |

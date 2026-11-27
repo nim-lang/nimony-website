@@ -163,9 +163,9 @@ Container-style concepts (e.g. `Findable[T]`) work the same way with iterators a
 
 # Latest news
 
-**2026-09-08** Nimony **0.6.2** has been released. It ships with a guest report from a
-user who spent a year porting real projects over. A Vulkan visualiser, a web
-framework, an embedded server: [Nim, one year in](version0_6.html).
+**2026-11-17** Nimony **0.6.4** has been released, the last stop before 6.0.0 in December.
+The compiler got pickier: [read the announcement](version_0_6_4.html) or the
+[changelog](version_0_6_4-changelog.html).
 
-Older entries, including the [0.2 release](version0_2.html), live on the
+Older entries, including [0.6.2](version0_6.html) and the [0.2 release](version0_2.html), live on the
 [News](news.html) page.
