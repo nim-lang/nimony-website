@@ -13,12 +13,12 @@ and Windows x86_64 — see [Download](download.html), browse
 
 ## Nimony v0.6.4 — the last stop before 6.0.0
 
-**2026-11-17** · *Andreas Rumpf*
+**2026-11-28** · *Andreas Rumpf*
 
 The last release before 6.0.0 in December. Yes, *6*: Nimony switches to
 time-based versioning. This release focussed on accepts-invalid bugs, so the
 compiler is as picky as we can get away with. It now rejects racy `||` loops.
-365 bug reports were closed as fixed.
+386 bug reports were closed as fixed.
 
 [→ Read the article](version_0_6_4.html) · [Changelog](version_0_6_4-changelog.html)
 

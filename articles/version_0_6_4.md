@@ -1,6 +1,6 @@
 # Nimony v0.6.4
 
-**2026-11-27**
+**2026-11-28**
 
 ## Author: Andreas Rumpf
 

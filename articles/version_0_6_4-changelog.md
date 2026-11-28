@@ -1,6 +1,6 @@
 # Nimony v0.6.4 — Changelog
 
-**2026-11-27**
+**2026-11-28**
 
 All changes since v0.6.2. See the [release announcement](version_0_6_4.html) for the
 rationale behind the stricter compiler.
@@ -18,16 +18,16 @@ tests excluded.
 | Lines removed | 18,946 | 10,239 | 29,185 |
 | Lines of Nim (non-blank), v0.6.2 | 143k | 66k | 209k |
 | Lines of Nim (non-blank), now | 204k | 76k | 280k |
-| Bug reports closed as fixed | 363 | 2 | **365** |
-| Bug reports still open | 333 | 8 | 341 |
+| Bug reports closed as fixed | 384 | 2 | **386** |
+| Bug reports still open | 366 | 8 | 374 |
 
-26 people contributed. Of nimony's 363 fixed bug reports, 158 are from nim-lang/nimony,
-149 from nimony-bugs-llms and 56 from nimony-bugs-fuzzers.
+26 people contributed. Of nimony's 384 fixed bug reports, 169 are from nim-lang/nimony,
+159 from nimony-bugs-llms and 56 from nimony-bugs-fuzzers.
 
 How many bugs *should* there be? The classic figure (McConnell, *Code Complete*) is
 1–25 defects per 1,000 lines of delivered code. For 280,000 lines that means somewhere
 between **280** and **7,000** bugs, roughly **4,200** at an industry-typical 15 per
-thousand lines. We fixed 365 in this cycle and know of 341 more. You do the math on
+thousand lines. We fixed 386 in this cycle and know of 374 more. You do the math on
 the rest; better yet, run the fuzzer and report them.
 
 
@@ -198,6 +198,6 @@ A security review (NMY-001 to NMY-018) led to these fixes:
 
 ## Bugfixes
 
-365 closed bug reports, many found by fuzzers and LLM-driven bug hunts
+386 closed bug reports, many found by fuzzers and LLM-driven bug hunts
 (planetis-m/nimony-bugs-fuzzers, planetis-m/nimony-bugs-llms). See the
 [git log](https://github.com/nim-lang/nimony/compare/v0.6.2...master) for the full list.
